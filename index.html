@@ -1,0 +1,1401 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Temario, tests y exámenes de las unidades 1 y 2: laboratorio de prótesis dental, almacén y sistemas de gestión.">
+<title>Laboratorio y Almacén Dental</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<style>
+/* Diseño: superficies blancas sobre un fondo verde-grisáceo, acento teal de consulta clínica.
+   Layout: una columna de 980px, barra de pestañas sticky, tarjetas por punto del temario. */
+:root {
+  --bg: #f3f6f5;
+  --surface: #ffffff;
+  --surface-2: #e9f0ee;
+  --ink: #11201c;
+  --muted: #556863;
+  --line: #d3dfdb;
+  --accent: #0c6a63;
+  --accent-ink: #ffffff;
+  --accent-soft: #d5ede9;
+  --ok: #17663a;
+  --ok-soft: #dcf2e2;
+  --bad: #a51d1d;
+  --bad-soft: #fbe1de;
+  --pop: #e63f7f;
+  --pop-soft: #ffe4ef;
+  --pop-ink: #b8265c;
+  --shadow: 0 1px 2px rgba(17, 32, 28, .06), 0 10px 28px rgba(17, 32, 28, .07);
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c1413;
+    --surface: #132120;
+    --surface-2: #1a2d2b;
+    --ink: #e3eeea;
+    --muted: #9ab0aa;
+    --line: #243937;
+    --accent: #5ccfc0;
+    --accent-ink: #0a1513;
+    --accent-soft: #163c37;
+    --ok: #6fd694;
+    --ok-soft: #153325;
+    --bad: #ff8d84;
+    --bad-soft: #3b1b19;
+    --pop: #ff7fb0;
+    --pop-soft: #3b1f2e;
+    --pop-ink: #ffa6c9;
+    --shadow: none;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c1413;
+  --surface: #132120;
+  --surface-2: #1a2d2b;
+  --ink: #e3eeea;
+  --muted: #9ab0aa;
+  --line: #243937;
+  --accent: #5ccfc0;
+  --accent-ink: #0a1513;
+  --accent-soft: #163c37;
+  --ok: #6fd694;
+  --ok-soft: #153325;
+  --bad: #ff8d84;
+  --bad-soft: #3b1b19;
+  --pop: #ff7fb0;
+  --pop-soft: #3b1f2e;
+  --pop-ink: #ffa6c9;
+  --shadow: none;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 400 15px/1.6 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { line-height: 1.2; margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(27px, 4vw, 40px); font-weight: 800; letter-spacing: -.025em; }
+h2 { font-size: 23px; font-weight: 750; letter-spacing: -.01em; }
+h3 { font-size: 16px; font-weight: 700; }
+p { margin: 0; }
+button { font: inherit; color: inherit; }
+button:focus-visible, a:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.muted { color: var(--muted); }
+.small { font-size: 13px; }
+.eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Cabecera */
+.hero { background: linear-gradient(100deg, var(--surface) 55%, var(--pop-soft)); border-bottom: 1px solid var(--line); }
+.hero-in {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-block: 36px 28px;
+}
+.lede { margin-top: 10px; color: var(--muted); max-width: 58ch; }
+.stats { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+.stat {
+  background: var(--surface-2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  min-width: 128px;
+}
+.stat b {
+  display: block;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.stat span { color: var(--muted); font-size: 12px; }
+
+/* Pestañas */
+.tabs {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.tabs-in {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding-block: 10px;
+  scrollbar-width: none;
+}
+.tabs-in::-webkit-scrollbar { display: none; }
+.tabs a {
+  flex: none;
+  text-decoration: none;
+  color: var(--muted);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.tabs a:hover { color: var(--ink); }
+.tabs a.on { background: var(--accent); color: var(--accent-ink); }
+.badge {
+  display: inline-block;
+  min-width: 20px;
+  padding: 0 6px;
+  margin-left: 4px;
+  border-radius: 999px;
+  background: var(--pop-soft);
+  color: var(--pop-ink);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+.tabs a.on .badge { background: var(--accent-ink); color: var(--accent); }
+
+main { padding-block: 26px 48px; min-height: 60vh; }
+.head-row { margin-bottom: 18px; }
+.head-row p { margin-top: 6px; color: var(--muted); max-width: 66ch; }
+
+/* Botones y chips */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 9px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+.btn:hover:not(:disabled) { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.ghost { background: transparent; }
+.btn:disabled { opacity: .5; cursor: default; }
+.link {
+  background: none;
+  border: 0;
+  padding: 6px 0;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+}
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; align-items: center; }
+.actions.start { margin: 0 0 16px; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.chip {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 999px;
+  padding: 6px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+}
+.chip.on { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.pill {
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--surface-2);
+  color: var(--muted);
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Barras de progreso */
+.bar { height: 8px; background: var(--surface-2); border-radius: 999px; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--accent); border-radius: 999px; transition: width .3s ease; }
+.bar.thin { height: 6px; }
+.progress-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+.progress-card p { margin-top: 8px; font-size: 14px; color: var(--muted); }
+
+/* Temario */
+.unit { margin-top: 28px; }
+.unit-title { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; font-size: 18px; }
+.unit-n {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 3px 9px;
+  border-radius: 6px;
+}
+.topic {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.topic summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  padding: 15px 44px 15px 18px;
+  position: relative;
+}
+.topic summary::-webkit-details-marker { display: none; }
+.topic summary::after {
+  content: "";
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: translateY(-70%) rotate(45deg);
+  transition: transform .2s ease;
+}
+.topic[open] summary::after { transform: translateY(-30%) rotate(-135deg); }
+.tnum { font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; min-width: 32px; }
+.ttitle { font-weight: 650; flex: 1 1 260px; min-width: 0; }
+.tmeta { color: var(--muted); font-size: 13px; }
+.topic-body { padding: 2px 18px 18px; border-top: 1px solid var(--line); }
+.notes { margin: 12px 0 0; padding-left: 18px; }
+.notes li { margin: 7px 0; }
+.topic-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--line);
+}
+.check { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; cursor: pointer; }
+.check input { width: 18px; height: 18px; accent-color: var(--accent); }
+
+/* Tests por tema */
+.test-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+.test-row > div { min-width: 0; flex: 1 1 240px; }
+.test-row.full { border-style: dashed; background: var(--surface-2); }
+
+/* Runner de preguntas */
+.runner { max-width: 760px; margin: 0 auto; }
+.runner-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 12px; }
+.qtext { font-size: clamp(19px, 2.6vw, 24px); font-weight: 700; line-height: 1.32; margin: 12px 0 18px; }
+.opts { display: grid; gap: 10px; }
+.opt {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  width: 100%;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 15px;
+  line-height: 1.4;
+  cursor: pointer;
+}
+.opt:hover:not(:disabled) { border-color: var(--accent); }
+.opt:disabled { cursor: default; }
+.letter {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--muted);
+}
+.opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+.opt.ok { border-color: var(--ok); background: var(--ok-soft); }
+.opt.ok .letter { background: var(--ok); color: #fff; }
+.opt.bad { border-color: var(--bad); background: var(--bad-soft); }
+.opt.bad .letter { background: var(--bad); color: #fff; }
+.fb {
+  margin-top: 16px;
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 14.5px;
+  background: var(--surface-2);
+}
+.fb.ok { background: var(--ok-soft); }
+.fb.bad { background: var(--bad-soft); }
+.fb.ok strong { color: var(--ok); }
+.fb.bad strong { color: var(--bad); }
+
+.result { text-align: center; padding: 22px 0 12px; }
+.big {
+  font-size: clamp(44px, 8vw, 64px);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.03em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.big span { font-size: .42em; color: var(--muted); letter-spacing: 0; }
+.result p.muted { margin-top: 8px; }
+.ok-note { color: var(--ok); font-weight: 600; margin-top: 16px; }
+
+.rev {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 10px;
+}
+.rev .meta { font-size: 12px; color: var(--muted); font-weight: 600; }
+.rev .rq { font-weight: 650; margin-top: 4px; }
+.rev .ra { color: var(--ok); font-weight: 650; margin-top: 6px; font-size: 14px; }
+.rev .ry { color: var(--bad); font-size: 14px; margin-top: 2px; }
+.rev .re { color: var(--muted); font-size: 14px; margin-top: 4px; }
+.diag {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px 48px;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+.diag b { text-align: right; font-variant-numeric: tabular-nums; }
+.empty {
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 14px;
+  padding: 28px;
+  text-align: center;
+}
+
+/* Exámenes */
+.exam-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.exam-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: var(--shadow);
+}
+.exam-card h3 { font-size: 20px; margin-top: 2px; }
+.exam-foot {
+  margin-top: auto;
+  padding-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.score { font-size: 22px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.exam-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+}
+.clock { font-size: 28px; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; }
+.clock.warn { color: var(--bad); }
+.exam-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.exam-q { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; }
+.exam-q .meta { font-size: 12px; color: var(--muted); font-weight: 600; }
+.exam-q h3 { margin: 4px 0 12px; font-size: 16px; line-height: 1.4; }
+
+/* Repaso express: tarjetas */
+.flash-wrap { max-width: 640px; margin: 0 auto; text-align: center; }
+.flash {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  text-align: left;
+  perspective: 1200px;
+}
+.flash-in {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform .55s cubic-bezier(.2, .7, .2, 1);
+}
+.flash.flipped .flash-in { transform: rotateY(180deg); }
+.face {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  padding: 28px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.face.back { transform: rotateY(180deg); background: var(--pop-soft); border-color: transparent; }
+.tag { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.ftext { font-size: clamp(18px, 2.6vw, 22px); font-weight: 700; line-height: 1.35; }
+.fexp { font-size: 14.5px; color: var(--muted); }
+.hint { font-size: 13px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  .flash-in, .bar span, .topic summary::after { transition: none; }
+}
+
+.foot {
+  color: var(--muted);
+  font-size: 13px;
+  padding-block: 18px 36px;
+  border-top: 1px solid var(--line);
+}
+/* Corazones junto al título, huecos de frase y detalles en color de apoyo */
+.title-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px; }
+.love { font-weight: 700; font-size: clamp(15px, 2vw, 18px); color: var(--pop-ink); }
+.heart { display: inline-block; color: var(--pop); animation: beat 1.4s ease-in-out infinite; }
+@keyframes beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.25); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.18); }
+}
+.blank { display: inline-block; min-width: 7em; border-bottom: 3px solid var(--pop); vertical-align: baseline; }
+.complete { display: block; margin-top: 8px; color: var(--ink); }
+.complete b { color: var(--ok); }
+.stat:nth-child(2) b { color: var(--pop); }
+@media (prefers-reduced-motion: reduce) { .heart { animation: none; } }
+</style>
+
+<header class="hero">
+  <div class="wrap hero-in">
+    <div>
+      <p class="eyebrow">Unidades 1 y 2 · Laboratorio y almacén</p>
+      <div class="title-row">
+        <h1>Laboratorio y almacén dental</h1>
+        <p class="love"><span class="heart" aria-hidden="true">♥</span> tú puedes, mi vida · eres la mejor · te amo mucho <span class="heart" aria-hidden="true">♥</span></p>
+      </div>
+      <p class="lede">Temario por puntos, tests con corrección inmediata y tres exámenes mixtos de 50 preguntas tipo test.</p>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="st-m">0</b><span>de <span id="tot-q">0</span> dominadas</span></div>
+      <div class="stat"><b id="st-s">0</b><span>de <span id="tot-t">0</span> puntos repasados</span></div>
+      <button class="btn ghost" id="theme" type="button">Modo oscuro</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Secciones">
+  <div class="wrap tabs-in">
+    <a href="#temario" data-view="temario">Temario</a>
+    <a href="#tests" data-view="tests">Tests por tema</a>
+    <a href="#examenes" data-view="examenes">Exámenes mixtos <span class="badge">3</span></a>
+    <a href="#repaso" data-view="repaso">Repaso express</a>
+    <a href="#fallos" data-view="fallos">Mis fallos <span class="badge" id="badge-fails">0</span></a>
+  </div>
+</nav>
+
+<main class="wrap" id="app"></main>
+
+<footer class="wrap foot">
+  Resumen de estudio elaborado a partir de las unidades 1 y 2 del material del curso. Las explicaciones resumen el contenido: contrasta siempre con los apuntes de clase.
+</footer>
+
+<script>
+/* ===== CONTENIDO: unidades 1 y 2 ===== */
+const UNITS = {
+  1: 'Diseño de un laboratorio de prótesis dental',
+  2: 'Almacenes sanitarios y sistemas informáticos de gestión'
+};
+const UNIT_IDS = [1, 2];
+
+const TOPICS = [
+  {
+    id: '1.1', unit: 1, title: 'El protésico dental y el laboratorio', pages: '',
+    notes: [
+      'El Técnico Superior en Prótesis Dentales diseña, fabrica, repara y adapta prótesis y productos sanitarios a medida, siguiendo la prescripción del odontólogo.',
+      'Su trabajo combina conocimientos científicos, destreza manual y tecnologías digitales.',
+      'El laboratorio es el lugar donde se diseñan, fabrican, reparan y controlan las prótesis. La clínica diagnostica y trata; el laboratorio convierte la prescripción en una prótesis personalizada.',
+      'Los laboratorios actuales combinan técnicas artesanales con CAD/CAM, escaneado e impresión 3D.',
+      'Pueden ser titulares personas físicas o jurídicas, pero el laboratorio debe estar organizado, gestionado y dirigido por protésicos dentales titulados.',
+      'Derechos del paciente: pedir un presupuesto estimativo por escrito, pagar directamente al protésico y elegir libremente el protésico.',
+      'En Aragón, la colegiación es obligatoria para ejercer, sea como asalariado o como autónomo (Ley 6/2000).'
+    ],
+    qs: [
+      { q: 'El laboratorio de prótesis es el lugar donde se ____, fabrican, reparan y controlan las prótesis dentales.', o: ['diseñan', 'diagnostican', 'prescriben'], a: 0, e: 'En el laboratorio se diseñan y fabrican las prótesis; el diagnóstico y el tratamiento se hacen en la clínica.' },
+      { q: 'Los titulares de un laboratorio pueden ser personas físicas o jurídicas, pero deben estar dirigidos por ____ titulados.', o: ['protésicos dentales', 'auxiliares de laboratorio', 'administrativos'], a: 0, e: 'El laboratorio está necesariamente organizado, gestionado y dirigido por protésicos dentales titulados.' },
+      { q: 'Según la Ley 6/2000 de Aragón, la ____ es obligatoria para ejercer la profesión, sea asalariado o autónomo.', o: ['colegiación', 'licencia de obra', 'acreditación docente'], a: 0, e: 'La colegiación obligatoria aparece en el artículo 4 de esa ley y en el artículo 9 de los estatutos.' },
+      { q: '¿Qué hace el laboratorio con la prescripción del odontólogo?', o: ['La transforma en una prótesis personalizada', 'La archiva sin usarla', 'La envía directamente al paciente', 'La elimina tras la visita'], a: 0, e: 'El laboratorio transforma la prescripción clínica en una prótesis personalizada que debe adaptarse a la boca del paciente.' },
+      { q: '¿Quién diagnostica y trata al paciente, según la diferencia entre clínica y laboratorio?', o: ['La clínica dental', 'El laboratorio de prótesis', 'El protésico', 'El propio paciente'], a: 0, e: 'La clínica realiza el diagnóstico y el tratamiento; el laboratorio fabrica la prótesis.' },
+      { q: '¿Qué puede pedir el paciente al protésico si lo solicita?', o: ['Un presupuesto estimativo por escrito', 'Un diagnóstico radiológico', 'Una cita en la clínica', 'La copia de su historia clínica'], a: 0, e: 'El convenio regula que el profesional elabore un presupuesto estimativo por escrito a solicitud del paciente.' },
+      { q: '¿Qué tecnologías combinan hoy los laboratorios con las técnicas artesanales?', o: ['CAD/CAM, escaneado e impresión 3D', 'Solo radiografías', 'Solo técnicas manuales', 'Ultrasonidos dentales'], a: 0, e: 'Los laboratorios actuales combinan lo artesanal con el diseño CAD/CAM, el escaneado y la impresión 3D.' },
+      { q: '¿Qué función cumple el Técnico Superior en Prótesis Dentales?', o: ['Diseñar, fabricar, reparar y adaptar prótesis a medida', 'Diagnosticar caries', 'Dirigir la clínica dental', 'Vender materiales a los pacientes'], a: 0, e: 'Es el profesional sanitario encargado de diseñar, fabricar, reparar y adaptar prótesis dentales y otros productos a medida.' },
+      { q: 'El paciente tiene el poder de…', o: ['Elegir libremente su protésico', 'Decidir el color de la cerámica de la clínica', 'Exigir un laboratorio público', 'No pagar nunca la prótesis'], a: 0, e: 'El temario recoge la libre elección de protésico y el derecho a pagar directamente al protésico.' },
+      { q: '¿Qué tipo de personas pueden ser titulares de un laboratorio de prótesis?', o: ['Personas físicas o jurídicas', 'Solo personas físicas', 'Solo empresas públicas', 'Solo odontólogos'], a: 0, e: 'Pueden serlo personas físicas o jurídicas, siempre dirigidas por protésicos titulados.' },
+      { q: '¿Qué es un laboratorio de prótesis dental?', o: ['Un lugar donde se diseñan, fabrican, reparan y controlan prótesis a medida', 'Una clínica con sillones dentales', 'Un almacén de cerámicas sin personal', 'Una oficina de seguros'], a: 0, e: 'Es el espacio donde se fabrican los productos sanitarios a medida, distinto de la clínica.' },
+      { q: '¿Qué ley obliga a la colegiación de los protésicos dentales en Aragón?', o: ['La Ley 6/2000', 'La Ley 2/1999', 'Un reglamento municipal', 'Ninguna norma'], a: 0, e: 'Es la Ley 6/2000, de creación del Colegio Profesional de Protésicos Dentales de Aragón.' },
+      { q: '¿Qué dice el temario sobre la colegiación de un protésico asalariado?', o: ['Es obligatoria igual que para el autónomo', 'No es necesaria', 'Solo la necesita si tiene clientes privados', 'Solo la necesita en la capital'], a: 0, e: 'Es obligatoria sea cual sea el modo y la forma de ejercer, asalariado o autónomo.' }
+    ]
+  },
+  {
+    id: '1.2', unit: 1, title: 'Normativa y requisitos del laboratorio', pages: '',
+    notes: [
+      'Los laboratorios son establecimientos sanitarios y deben cumplir la normativa para proteger a los trabajadores, la calidad de los productos y al paciente.',
+      'Normativa principal: Ley General de Sanidad (Ley 14/1986, de 25 de abril), el real decreto sobre productos sanitarios, la normativa de autorización de centros sanitarios y la legislación sobre fabricantes de productos sanitarios a medida.',
+      'Cada comunidad autónoma fija los requisitos para autorizar la apertura y el funcionamiento del laboratorio.',
+      'La licencia sanitaria se revalida cada 5 años. Los cambios (traslado, titularidad, ampliación o tipo de productos) deben comunicarse.',
+      'Paredes, suelos y techos deben ser lavables y no acumular suciedad; las paredes, alicatadas o con pintura lavable hasta 2 m.',
+      'Áreas mínimas: zona auxiliar, área común de escayola, área de fundición y área de montaje, modelado, desbastado o pulido. No puede haber sillones dentales y debe existir extracción de aire con filtros.',
+      'Higiene: las impresiones y productos que vienen de la boca se desinfectan, y los trabajos se desinfectan antes de salir del laboratorio.'
+    ],
+    qs: [
+      { q: 'La licencia sanitaria de un laboratorio debe ____ cada 5 años.', o: ['revalidarse', 'ampliarse', 'anularse'], a: 0, e: 'Además, cualquier cambio en las condiciones de la licencia debe comunicarse.' },
+      { q: 'En un laboratorio de prótesis no puede haber ____ dentales.', o: ['sillones', 'cerámicas', 'fresas'], a: 0, e: 'El laboratorio no es una clínica: no se atiende al paciente en él.' },
+      { q: 'Las paredes del laboratorio deben estar alicatadas o pintadas con pintura lavable hasta una altura mínima de ____ m.', o: ['2', '1,5', '3'], a: 0, e: 'Deben ser lavables y no permitir la acumulación de suciedad.' },
+      { q: '¿Qué ley general de sanidad se cita como norma básica de los laboratorios?', o: ['La Ley 14/1986, de 25 de abril', 'La Ley 6/2000', 'La Ley de Protección de Datos', 'El Código Civil'], a: 0, e: 'Es la Ley General de Sanidad, Ley 14/1986, de 25 de abril.' },
+      { q: '¿Quién establece los requisitos para autorizar la apertura de los laboratorios?', o: ['Cada comunidad autónoma', 'El paciente', 'La empresa de suministros', 'El fabricante de la resina'], a: 0, e: 'Cada comunidad autónoma establece los requisitos necesarios para autorizar la apertura y el funcionamiento.' },
+      { q: '¿Qué cambios deben comunicarse en la licencia del laboratorio?', o: ['Traslado, cambio de titularidad, ampliación o cambio de productos', 'Solo el color de las paredes', 'Solo las vacaciones del personal', 'Ningún cambio'], a: 0, e: 'Cualquier cambio en las condiciones en las que se concedió la licencia debe comunicarse.' },
+      { q: '¿Qué áreas mínimas debe tener todo laboratorio?', o: ['Zona auxiliar, área de escayola, de fundición y de montaje o modelado', 'Quirófano y sala de espera', 'Solo un despacho', 'Sala de rayos X'], a: 0, e: 'Estas áreas son obligatorias como mínimo, según el tipo de prótesis que fabrique el laboratorio.' },
+      { q: '¿Cómo deben ser las superficies del laboratorio?', o: ['Limpias, fácilmente lavables y sin acumulación de suciedad', 'Porosas para absorber el agua', 'Con alfombras', 'Sin ningún tipo de protección'], a: 0, e: 'Deben diseñarse para que sean lavables y no permitan la acumulación de suciedad.' },
+      { q: '¿Qué sistema debe tener el laboratorio para proteger a sus trabajadores?', o: ['Extracción de aire provista de filtros', 'Ventiladores sin filtros', 'Ningún sistema', 'Aire acondicionado sin extracción'], a: 0, e: 'El sistema de extracción con filtros garantiza la seguridad de los trabajadores.' },
+      { q: '¿Qué ocurre con las impresiones que llegan de la boca del paciente?', o: ['Se desinfectan antes de manipularlas', 'Se guardan sin tratar', 'Se usan directamente', 'Se tiran siempre'], a: 0, e: 'Pueden traer restos de saliva y sangre, por lo que deben desinfectarse.' },
+      { q: '¿Por qué se desinfectan los productos elaborados antes de salir del laboratorio?', o: ['Para que lleguen en buenas condiciones al paciente', 'Para cobrarlos más caros', 'Para cambiarles el color', 'Solo por obligación del colegio'], a: 0, e: 'Se desinfectan para que lleguen en buenas condiciones a la clínica y al paciente.' },
+      { q: '¿Qué condición deben cumplir los desinfectantes del laboratorio?', o: ['No alterar las características de los materiales', 'Ser siempre muy agresivos', 'Dar un olor fuerte', 'Ser de uso exclusivo del paciente'], a: 0, e: 'Deben ser los adecuados para no alterar las características de los materiales.' },
+      { q: '¿Qué normativa regula la fabricación de productos sanitarios a medida?', o: ['La legislación específica sobre fabricantes de productos sanitarios a medida', 'Ninguna', 'Solo las normas de tráfico', 'Solo las normas de cocina'], a: 0, e: 'Es la legislación específica sobre fabricantes de productos sanitarios a medida.' }
+    ]
+  },
+  {
+    id: '1.3', unit: 1, title: 'Áreas del laboratorio y personal', pages: '',
+    notes: [
+      'Área de escayola: positivado de impresiones, preparación de modelos y montaje en articulador. Antes se desinfectan las impresiones.',
+      'Área de fabricación: metálico (estructuras de esqueléticos e implantología), resina o acrílico (removibles completas y parciales) y cerámica (montaje sobre puentes, coronas y prótesis sobre implantes).',
+      'Área digital CAD/CAM: ordenadores, escáner de laboratorio, software CAD, fresadora e impresora 3D.',
+      'Despacho: tareas administrativas, archivo documental y recepción de pedidos y prescripciones.',
+      'Servicios y vestuarios separados de la zona de fabricación. Hay que cambiarse al entrar y al salir, y usar bata.',
+      'Almacén: materiales y productos sanitarios, con control de caducidades, lotes, condiciones y stock.',
+      'Personal: Técnico Superior (diseñar, fabricar, reparar y controlar), auxiliar de laboratorio, responsable de calidad, personal administrativo, personal de logística y especialista CAD/CAM.'
+    ],
+    qs: [
+      { q: 'En el área de ____ se hace el positivado de impresiones y el montaje en articulador.', o: ['escayola', 'cerámica', 'digital'], a: 0, e: 'Es la primera zona por la que pasan la mayoría de los trabajos que llegan de la clínica.' },
+      { q: 'El área de ____ es la zona donde se montan las cerámicas sobre puentes, coronas e implantes.', o: ['cerámica', 'despacho', 'almacén'], a: 0, e: 'En esta área se necesitan una mesa limpia, pinceles y los distintos tipos de cerámica.' },
+      { q: 'El especialista ____ realiza el diseño digital y prepara la fabricación.', o: ['CAD/CAM', 'de logística', 'de calidad'], a: 0, e: 'Usa sistemas CAD/CAM para diseñar y preparar la fabricación de la prótesis.' },
+      { q: '¿Qué se hace en el área de escayola?', o: ['Positivado de impresiones, preparación de modelos y montaje en articulador', 'Fresado de circonio', 'Archivo de facturas', 'Almacenamiento de cerámicas'], a: 0, e: 'En esta área se elaboran los modelos a partir de las impresiones.' },
+      { q: '¿Qué equipos incluye el área digital CAD/CAM?', o: ['Ordenadores, escáner, software CAD, fresadora e impresora 3D', 'Prensa hidráulica y olla hidroneumática', 'Hornos de cerámica', 'Mesa de escayola'], a: 0, e: 'Es el equipamiento habitual de esta área digital.' },
+      { q: '¿Qué función tiene el despacho del laboratorio?', o: ['Tareas administrativas, archivo y recepción de pedidos y prescripciones', 'Fabricar estructuras metálicas', 'Desinfectar impresiones', 'Almacenar yesos'], a: 0, e: 'Es la zona dotada para las tareas administrativas y del archivo documental.' },
+      { q: '¿Qué hay que hacer al entrar y al salir del laboratorio?', o: ['Cambiarse y usar bata', 'Comer algo rápido', 'Hablar con la clínica', 'Nada en especial'], a: 0, e: 'Es importante cambiarse antes de entrar y al salir, y usar bata y las medidas de seguridad de cada área.' },
+      { q: '¿Qué debe controlarse en el almacén del laboratorio?', o: ['Caducidades, lotes, condiciones de almacenamiento y stock', 'Solo el color de las paredes', 'El horario del personal', 'Nada'], a: 0, e: 'Estos cuatro puntos son los que el temario indica para controlar el almacén.' },
+      { q: '¿Qué tarea corresponde al auxiliar de laboratorio?', o: ['Preparación de materiales, limpieza y organización', 'Dirigir el laboratorio', 'Diseñar en CAD', 'Facturar a los clientes'], a: 0, e: 'El auxiliar colabora en la preparación de materiales, la limpieza y la organización.' },
+      { q: '¿Quién supervisa la calidad, la documentación y la trazabilidad?', o: ['El responsable de calidad', 'El personal de logística', 'El auxiliar de laboratorio', 'El paciente'], a: 0, e: 'El responsable de calidad vela por la calidad, la documentación y la trazabilidad.' },
+      { q: '¿Qué hace el personal de logística?', o: ['Transporta los trabajos entre el laboratorio y las clínicas', 'Diseña las prótesis', 'Funde los metales', 'Atiende a los pacientes'], a: 0, e: 'Su función es el transporte de los trabajos entre el laboratorio y las clínicas.' },
+      { q: '¿Qué tipo de prótesis se fabrica en el área de resina?', o: ['Removibles completas y parciales de resina', 'Coronas de circonio', 'Implantes quirúrgicos', 'Radiografías'], a: 0, e: 'Son las prótesis removibles de resina acrílica u otros plásticos.' },
+      { q: '¿Qué se fabrica en el área metálica?', o: ['Estructuras metálicas para removibles (esqueléticos) e implantología', 'Prótesis de resina completas', 'Radiografías', 'Férulas de blanqueamiento'], a: 0, e: 'En esta área se confeccionan las estructuras metálicas de los esqueléticos y de la implantología.' }
+    ]
+  },
+  {
+    id: '1.4', unit: 1, title: 'Instrumentos, materiales y maquinaria', pages: '',
+    notes: [
+      'Instrumentos básicos: cubetas, articuladores, paralelómetro, lecron, zhale, cuchillo de encerar, Peter K. Thomas, pinceles, espátulas de cerámica, espátula de escayola, tazón de goma, pinza de mosquito, calibrador de grosores, alicates y bisturí.',
+      'Los tres materiales de fabricación son la resina, el metal y la cerámica.',
+      'Metal: oro y sus aleaciones, cromo-cobalto y cromo-níquel son las más usadas. Se trabaja por colado con cera perdida. Para pacientes alérgicos: aleaciones preciosas, titanio o circonio.',
+      'El circonio fabricado con CAD/CAM no causa reacciones alérgicas, es tan duro como las aleaciones y más estético y preciso.',
+      'Cerámica o porcelana: material mineral, duro y frágil pero rígido, que se obtiene por calor en un horno. Se clasifica por temperatura de fusión y por composición.',
+      'Resina: para bases de prótesis metálicas, ortodoncia, removibles y provisionales. Es la más sencilla y económica. Los dientes acrílicos también son de resina.',
+      'Maquinaria: vibradora, recortadora de modelos, polimerizadora u olla hidroneumática, mufla, micromotor, arenadora, baño electrolítico, motor de esqueléticos, termomoldeadora, lámpara fotopolimerizadora, baño de ultrasonidos y vaporeta.'
+    ],
+    qs: [
+      { q: 'El ____ sirve para determinar el eje de inserción de las prótesis.', o: ['paralelómetro', 'vibrador', 'mufla'], a: 0, e: 'Tiene en cuenta las superficies retentivas para dar retención, estabilidad y estética a la prótesis.' },
+      { q: 'El circonio fabricado con CAD/CAM no causa reacciones ____.', o: ['alérgicas', 'térmicas', 'visuales'], a: 0, e: 'Es un material que no causa alergias, además de duro, estético y preciso.' },
+      { q: 'La ____ es un material mineral, duro y frágil, obtenido por la acción del calor en un horno.', o: ['cerámica', 'resina', 'cera'], a: 0, e: 'También se llama porcelana y se clasifica por temperatura de fusión y composición química.' },
+      { q: '¿Cuáles son los tres materiales de fabricación de prótesis?', o: ['Resina, metal y cerámica', 'Yeso, cera y goma', 'Plata, vidrio y papel', 'Titanio, grafito y cera'], a: 0, e: 'Son los tres materiales principales que se usan en la fabricación de prótesis.' },
+      { q: '¿Qué instrumento se usa para encerar, con cuchilla recta y cola de castor en los extremos?', o: ['Lecron', 'Zhale', 'Pinza de mosquito', 'Bisturí'], a: 0, e: 'El lecron tiene una cuchilla recta y una cola de castor, y ambos extremos se calientan para encerar.' },
+      { q: '¿Para qué sirve la pinza de mosquito?', o: ['Sujetar cofias metálicas sin tocarlas y llevarlas al horno', 'Cortar alambre', 'Mezclar la escayola', 'Medir el color del diente'], a: 0, e: 'Permite sujetar las cofias de puentes, coronas e implantes una vez montada la cerámica.' },
+      { q: '¿Qué aleaciones se usan para pacientes con alergia a algunos metales?', o: ['Aleaciones preciosas, titanio o circonio', 'Hierro puro', 'Plomo', 'Mercurio'], a: 0, e: 'En esos casos se usan aleaciones preciosas, titanio o circonio.' },
+      { q: '¿Qué máquina elimina las burbujas de aire al vaciar una impresión?', o: ['La vibradora', 'La arenadora', 'La lámpara fotopolimerizadora', 'La vaporeta'], a: 0, e: 'La vibradora (vibrador de escayola) elimina las burbujas al vaciar la impresión.' },
+      { q: '¿Qué aparato limpia el revestimiento de las prótesis metálicas al salir del cilindro?', o: ['La arenadora', 'La mufla', 'La polimerizadora', 'El motor de esqueléticos'], a: 0, e: 'La arenadora es un aparato de chorreado que limpia el revestimiento.' },
+      { q: '¿Para qué se usa la lámpara fotopolimerizadora?', o: ['Para polimerizar rápidamente materiales fotopolimerizables', 'Para fundir oro', 'Para mezclar escayola', 'Para limpiar fresas'], a: 0, e: 'Permite una rápida polimerización de los materiales fotopolimerizables.' },
+      { q: '¿Qué material es el más sencillo y económico de manipular?', o: ['La resina', 'El circonio', 'La cerámica', 'El oro'], a: 0, e: 'El temario indica que la resina es el material más sencillo y, a la vez, el más económico.' },
+      { q: '¿Qué aparato sirve para abrillantar esqueléticos empleando la electrólisis?', o: ['El baño electrolítico', 'La termomoldeadora', 'La recortadora', 'La vaporeta'], a: 0, e: 'El baño electrolítico permite abrillantar los esqueléticos por electrólisis.' },
+      { q: '¿Para qué sirve la máquina termomoldeadora?', o: ['Fabricar planchas termomoldeables para férulas dentales', 'Fresar circonio', 'Medir grosores de metal', 'Arenar el metal'], a: 0, e: 'Permite fabricar planchas termomoldeables, que se usan en la elaboración de las férulas dentales.' }
+    ]
+  },
+  {
+    id: '1.5', unit: 1, title: 'Seguridad, riesgos y equipos de protección', pages: '',
+    notes: [
+      'Riesgo biológico: contacto con impresiones o prótesis con saliva o sangre. Medidas: desinfectar, usar guantes y lavarse las manos.',
+      'Riesgo químico: resinas, monómeros, ácidos y disolventes. Medidas: zonas ventiladas, mascarilla y guantes, y seguir las fichas de seguridad.',
+      'Riesgo mecánico: micromotores, discos, fresas y pulidoras. Medidas: gafas de protección, sujetar bien las piezas y revisar el instrumental.',
+      'Riesgo térmico: hornos, mecheros y equipos a alta temperatura. Medidas: pinzas, guantes térmicos y esperar el enfriamiento.',
+      'Riesgo ergonómico: muchas horas sentado. Medidas: buen apoyo, silla cómoda, postura correcta y pausas periódicas.',
+      'EPI: bata, guantes, mascarilla, gafas de protección, calzado cerrado y protección auditiva cuando sea necesaria.',
+      'Es obligatorio un botiquín de primeros auxilios con productos en fecha. Normas: no comer, beber ni fumar en el laboratorio, y lavarse las manos al terminar la jornada.'
+    ],
+    qs: [
+      { q: 'La bioseguridad es el conjunto de normas que tienen como objetivo ____ los accidentes en el área de trabajo.', o: ['prevenir', 'fomentar', 'ignorar'], a: 0, e: 'El riesgo es la probabilidad de sufrir una lesión o enfermedad como consecuencia de un factor de riesgo.' },
+      { q: 'Los micromotores lanzan partículas que deben protegerse con ____ especiales.', o: ['gafas', 'guantes', 'mascarillas'], a: 0, e: 'Las partículas son pequeñas y peligrosas para los ojos, por eso se usan gafas de protección.' },
+      { q: 'Para manipular piezas calientes de los hornos se usan ____.', o: ['pinzas', 'las manos desnudas', 'un soplador'], a: 0, e: 'Las piezas calientes se manipulan con pinzas, y con guantes térmicos cuando sea necesario.' },
+      { q: '¿Qué riesgo se produce por el contacto con impresiones contaminadas con saliva o sangre?', o: ['Riesgo biológico', 'Riesgo térmico', 'Riesgo ergonómico', 'Riesgo mecánico'], a: 0, e: 'Es un riesgo biológico, y se previene desinfectando, usando guantes y lavándose las manos.' },
+      { q: '¿Qué medida preventiva corresponde al riesgo químico?', o: ['Trabajar en zonas bien ventiladas y usar mascarilla y guantes', 'Usar gafas de sol', 'Comer en el puesto de trabajo', 'No revisar las fichas de seguridad'], a: 0, e: 'Hay que seguir también las indicaciones de las fichas de seguridad.' },
+      { q: '¿Qué riesgo implica la postura durante muchas horas sentado?', o: ['Riesgo ergonómico', 'Riesgo biológico', 'Riesgo térmico', 'Riesgo químico'], a: 0, e: 'Puede provocar dolores musculares y articulares, por eso hay que tener buena silla y pausas.' },
+      { q: '¿Qué EPI protege los ojos frente a las partículas de micromotores?', o: ['Gafas de protección', 'Calzado cerrado', 'Protección auditiva', 'La bata'], a: 0, e: 'Los ojos deben estar siempre protegidos con gafas especiales.' },
+      { q: 'En el proceso de colado del metal, ¿qué gafas se emplean?', o: ['Gafas con cristales ahumados', 'Gafas de buceo', 'Ninguna', 'Gafas de soldador'], a: 0, e: 'Durante el colado del metal se usan gafas con cristales ahumados.' },
+      { q: 'Según el temario, ¿qué es un riesgo?', o: ['La posibilidad de que se produzca un hecho indeseable', 'Un tipo de material', 'Un instrumento de corte', 'Una enfermedad concreta'], a: 0, e: 'Riesgo es la posibilidad de que se pueda producir un hecho indeseable.' },
+      { q: '¿Qué es obligatorio tener en el laboratorio en cuanto a primeros auxilios?', o: ['Un botiquín con productos en fecha', 'Un sillón dental', 'Un horno de leña', 'Nada'], a: 0, e: 'El botiquín de primeros auxilios es obligatorio y sus productos deben estar en fecha.' },
+      { q: '¿Por qué debe informar el odontólogo al protésico de ciertas afecciones?', o: ['Para que tenga especial cuidado en la manipulación', 'Para cobrar más', 'Para no hacer la prótesis', 'No es importante'], a: 0, e: 'Algunas impresiones y prótesis pueden transmitir enfermedades contagiosas como la hepatitis.' },
+      { q: '¿Qué norma de higiene es básica en el laboratorio?', o: ['No comer, beber ni fumar en el laboratorio', 'Comer en el puesto de trabajo', 'Fumar en la zona de fundición', 'Beber mientras se trabaja con resina'], a: 0, e: 'Es una de las normas básicas de seguridad del laboratorio.' },
+      { q: '¿Qué EPI se usa para proteger el oído cuando sea necesario?', o: ['Protección auditiva', 'Mascarilla', 'Guantes', 'Gafas ahumadas'], a: 0, e: 'La protección auditiva se usa cuando sea necesaria.' }
+    ]
+  },
+  {
+    id: '1.6', unit: 1, title: 'Limpieza, desinfección y mantenimiento', pages: '',
+    notes: [
+      'Todo material que llega desde la clínica se considera potencialmente contaminado.',
+      'Protocolo general: recepción, lavado, desinfección, fabricación, limpieza y desinfección final, y entrega a la clínica.',
+      'Limpieza: eliminar materiales extraños con agua y detergentes. Desinfección: eliminar microorganismos con líquidos químicos. Esterilización: eliminar todas las formas de vida, por ejemplo con calor húmedo a presión.',
+      'Asepsia: ausencia de gérmenes. Antiséptico: compuesto antimicrobiano que se usa sobre tejidos vivos sin causar daño.',
+      'Impresiones: recepción con EPI, lavado con abundante agua, desinfectante compatible y aclarado si lo indica el fabricante. Los hidrocoloides o ciertos poliéteres pueden deformarse si se sumergen demasiado tiempo.',
+      'Mantenimiento diario: limpiar el puesto, retirar restos de yeso, resina y metal, y limpiar el micromotor. Periódico: limpiar la decantadora, revisar aspiración y filtros, y registrar las revisiones.',
+      'Un buen mantenimiento prolonga la vida útil de los equipos, reduce averías, mejora la precisión y garantiza la seguridad.'
+    ],
+    qs: [
+      { q: 'La ____ es la eliminación de todas las formas de vida, y se consigue con calor húmedo o vapor a presión.', o: ['esterilización', 'limpieza', 'asepsia'], a: 0, e: 'La esterilización es la eliminación completa de todas las formas de vida.' },
+      { q: 'La desinfección es el proceso que elimina los ____ con líquidos químicos.', o: ['microorganismos', 'restos de yeso', 'metales'], a: 0, e: 'Los microorganismos son organismos que solo se ven con microscopio.' },
+      { q: 'Los hidrocoloides pueden ____ si permanecen demasiado tiempo sumergidos en la solución desinfectante.', o: ['deformarse', 'endurecerse', 'colorearse'], a: 0, e: 'Por eso hay que respetar siempre las indicaciones del fabricante.' },
+      { q: '¿Cuál es el orden del protocolo general del material que llega de la clínica?', o: ['Recepción, lavado, desinfección, fabricación, limpieza final y entrega', 'Fabricación, entrega y lavado', 'Entrega, desinfección y recepción', 'Lavado, entrega y fabricación'], a: 0, e: 'Todo el proceso empieza con la recepción y termina con la entrega a la clínica.' },
+      { q: 'Según las definiciones del temario, ¿con qué se realiza la limpieza?', o: ['Con agua y detergentes', 'Con calor seco', 'Con rayos X', 'Con luz ultravioleta'], a: 0, e: 'La limpieza elimina los materiales extraños con agua y detergentes.' },
+      { q: '¿Qué es la asepsia?', o: ['La ausencia de gérmenes', 'Un tipo de resina', 'Una máquina de vapor', 'Un instrumento de corte'], a: 0, e: 'Son las técnicas que evitan la presencia de gérmenes patógenos en un área u objeto.' },
+      { q: '¿Qué es un antiséptico?', o: ['Un compuesto antimicrobiano que se usa sobre tejidos vivos sin causar daño', 'Un yeso de alta resistencia', 'Un material de impresión', 'Un tipo de bisturí'], a: 0, e: 'Los antisépticos se aplican a tejidos vivos sin causar daño ni irritación.' },
+      { q: 'Según el temario, ¿qué tarea corresponde al mantenimiento diario?', o: ['Limpiar el puesto de trabajo y retirar restos de yeso, resina y metal', 'Calibrar los equipos digitales', 'Limpiar la decantadora', 'Registrar las revisiones anuales'], a: 0, e: 'Calibrar los equipos digitales y limpiar la decantadora son tareas de mantenimiento periódico.' },
+      { q: '¿Qué tarea corresponde al mantenimiento periódico?', o: ['Limpiar la decantadora y revisar el sistema de aspiración y los filtros', 'Limpiar el puesto de trabajo', 'Retirar restos de yeso cada día', 'Lavar las impresiones'], a: 0, e: 'Es una tarea de mantenimiento periódico, según el temario.' },
+      { q: '¿Qué consigue un buen mantenimiento de los equipos?', o: ['Prolongar su vida útil y reducir las averías', 'Aumentar los fallos', 'Impedir la limpieza', 'Eliminar la seguridad'], a: 0, e: 'Además mejora la precisión de los trabajos y garantiza la seguridad del personal.' },
+      { q: '¿Qué hay que hacer con las prótesis terminadas antes de entregarlas a la clínica?', o: ['Limpiarlas y desinfectarlas', 'Guardarlas sin tratar', 'Enviarlas sin revisar', 'Cambiarles el color'], a: 0, e: 'La prótesis debe limpiarse y desinfectarse antes de cualquier entrega.' },
+      { q: '¿Cómo se considera el material que llega desde la clínica?', o: ['Potencialmente contaminado', 'Siempre estéril', 'Caducado', 'Sin ningún riesgo'], a: 0, e: 'Puede contener restos de saliva, sangre u otros fluidos biológicos.' },
+      { q: '¿Con qué frecuencia deben limpiarse los equipos según el mantenimiento diario?', o: ['Diariamente', 'Cada cinco años', 'Solo al final del curso', 'Nunca'], a: 0, e: 'El temario indica limpiar diariamente los equipos.' }
+    ]
+  },
+  {
+    id: '2.1', unit: 2, title: 'Funciones y tipos de almacén', pages: '',
+    notes: [
+      'El almacén guarda las materias primas, el instrumental y los productos necesarios para fabricar prótesis. Un buen almacén evita caducidades, reduce costes y garantiza la trazabilidad.',
+      'Funciones: recepción (comprobar que el pedido coincide con lo solicitado), almacenamiento, control de existencias, reposición, conservación (temperatura, humedad y limpieza), control de lotes y caducidades, y registro de entradas y salidas.',
+      'Según el tamaño: almacenes centrales (grandes depósitos) o pequeños (existencias mínimas, como el del laboratorio).',
+      'Según el material: a temperatura ambiente, refrigerados (productos químicos con temperatura controlada) y especiales (inflamables y peligrosos).',
+      'Abiertos: cualquier trabajador autorizado coge lo que necesita. Ventaja: ahorro de tiempo. Inconveniente: es difícil controlar el consumo.',
+      'Cerrados: una persona responsable entrega los materiales y registra las entradas y salidas. Ventaja: más control. Inconveniente: más tiempo de entrega.',
+      'Los monómeros, disolventes, adhesivos, resinas fotopolimerizables e inflamables van en armarios específicos, lejos del calor.'
+    ],
+    qs: [
+      { q: 'En un almacén ____, una persona se encarga de entregar los materiales y de registrar las entradas y salidas.', o: ['cerrado', 'abierto', 'central'], a: 0, e: 'En el almacén cerrado el acceso está restringido y existe una persona responsable.' },
+      { q: 'Los productos inflamables deben almacenarse en ____ específicos y alejados de fuentes de calor.', o: ['armarios', 'cajas de cartón', 'cubos'], a: 0, e: 'Los productos de la zona especial se guardan en armarios específicos.' },
+      { q: 'La función de ____ comprueba que el pedido recibido coincide con el solicitado.', o: ['recepción', 'reposición', 'inventario'], a: 0, e: 'Es la primera función del almacén cuando llega un pedido.' },
+      { q: '¿Qué objetivo principal tiene un buen almacén?', o: ['Disponer de materiales, evitar caducidades y garantizar la trazabilidad', 'Guardar todo sin registrar', 'Vender materiales a los clientes', 'Eliminar las fichas'], a: 0, e: 'Así se reducen costes y se garantiza la trazabilidad de los productos utilizados.' },
+      { q: '¿Qué función tiene el control de existencias?', o: ['Conocer en todo momento el stock disponible', 'Diseñar prótesis', 'Cobrar facturas', 'Lavar impresiones'], a: 0, e: 'Permite saber qué materiales hay y cuáles hay que pedir.' },
+      { q: '¿Qué significa la reposición en el almacén?', o: ['Solicitar pedidos antes de que se agoten los materiales', 'Devolver materiales al proveedor sin registrarlo', 'Retirar productos caducados sin avisar', 'Cambiar el color de las estanterías'], a: 0, e: 'Se repone el material antes de que se agote.' },
+      { q: 'Un almacén pequeño, como el de un laboratorio, se caracteriza por…', o: ['Disponer de existencias mínimas', 'Tener cantidades enormes de todo tipo', 'Ser un depósito central', 'No tener ningún producto'], a: 0, e: 'Los almacenes centrales son grandes depósitos; los pequeños tienen existencias mínimas.' },
+      { q: '¿Qué tipo de almacén se usa para productos químicos que requieren temperatura controlada?', o: ['Refrigerado', 'Abierto', 'De madera', 'Central sin control'], a: 0, e: 'Según el material, existen almacenes a temperatura ambiente, refrigerados y especiales.' },
+      { q: 'En un almacén abierto, ¿quién puede coger los materiales?', o: ['Cualquier trabajador autorizado de la empresa', 'Solo el responsable del almacén', 'Nadie: todo se pide por escrito', 'Solo los clientes'], a: 0, e: 'El personal autorizado accede directamente a los materiales que necesita.' },
+      { q: '¿Cuál es una ventaja del almacén cerrado?', o: ['Mayor control sobre el consumo de materiales', 'Acceso libre sin registro', 'Entregas inmediatas siempre', 'Ningún control de productos'], a: 0, e: 'También reduce el riesgo de pérdidas y desperdicios.' },
+      { q: '¿Cuál es un inconveniente del almacén abierto?', o: ['Puede resultar difícil controlar quién utiliza cada material', 'El acceso está restringido', 'Exceso de registros', 'Tiempo de entrega muy largo'], a: 0, e: 'Si no se registran las salidas, el inventario puede no coincidir con las existencias reales.' },
+      { q: '¿Qué productos se guardan en la zona de productos especiales?', o: ['Monómeros, disolventes, adhesivos y resinas fotopolimerizables', 'Cerámicas feldespáticas', 'Dientes acrílicos', 'Papel de oficina'], a: 0, e: 'Son productos que requieren condiciones específicas de almacenamiento.' },
+      { q: '¿Qué tipo de almacén facilita más la autonomía de los trabajadores?', o: ['El abierto', 'El cerrado', 'El central', 'El refrigerado'], a: 0, e: 'En el abierto cada trabajador coge directamente lo que necesita.' },
+      { q: 'Según el temario, ¿cuántas referencias diferentes puede almacenar un laboratorio?', o: ['Más de 500', 'Menos de 10', 'Exactamente 50', 'Ninguna'], a: 0, e: 'Entre yesos, cerámicas, resinas, dientes, aleaciones, discos CAD/CAM y tornillos de implantes.' },
+      { q: '¿Qué implica la función de conservación del almacén?', o: ['Mantener los productos a la temperatura, humedad y limpieza adecuadas', 'Vender los productos antes de que caduquen', 'Quitar las etiquetas', 'Modificar la composición del producto'], a: 0, e: 'Los productos deben mantenerse en las condiciones adecuadas de temperatura, humedad y limpieza.' },
+      { q: '¿Qué implica el registro de entradas y salidas?', o: ['Llevar un seguimiento de los movimientos del almacén', 'Dejar de controlar las cantidades', 'Guardar los productos sin fecha', 'Suprimir los pedidos'], a: 0, e: 'Permite seguir los movimientos del almacén y mantener el inventario correcto.' }
+    ]
+  },
+  {
+    id: '2.2', unit: 2, title: 'Conservación de materiales del laboratorio', pages: '',
+    notes: [
+      'Yesos: tipo II para modelos de estudio; tipo III (yeso piedra) para modelos de trabajo y prótesis completas; tipo IV (alta resistencia y baja expansión) para modelos de precisión y prótesis fija; tipo V (alta resistencia y elevada expansión) para compensar la contracción de las aleaciones.',
+      'Los yesos se guardan en un lugar seco, en su envase original cerrado, sobre estanterías o palés, y separados de los líquidos. Si absorben humedad, pueden fraguar parcialmente.',
+      'Impresiones: alginatos (impresiones preliminares y determinados modelos), siliconas por adición (gran precisión dimensional) y siliconas por condensación. Se guardan en su envase original, en lugar limpio y seco.',
+      'Resinas: autopolimerizables (reacción química al mezclar), termopolimerizables (calor, para bases de prótesis completas) y fotopolimerizables (luz, para cubetas y bases de registro). Algunas deben protegerse de la luz.',
+      'Cerámicas: coronas, carillas y componentes de prótesis fija. Protegidas del polvo, organizadas por fabricante y sistema, e identificadas por colores y masas (dentina, esmalte, incisal). Los bloques y discos CAD/CAM van en sus envases o soportes.',
+      'Aleaciones: cromo-cobalto, titanio, preciosas y semipreciosas. Hay que identificar cada aleación y registrar las entradas y salidas de las de alto coste.',
+      'Dientes artificiales: se organizan por fabricante, material, forma, tamaño, color, tipo (incisivos, caninos, premolares y molares) y referencia.'
+    ],
+    qs: [
+      { q: 'El yeso tipo ____ es el de alta resistencia y baja expansión, usado en modelos de precisión y prótesis fija.', o: ['IV', 'II', 'V'], a: 0, e: 'El tipo V tiene alta resistencia y elevada expansión, y se usa para compensar la contracción de las aleaciones.' },
+      { q: 'Las resinas ____ endurecen al recibir luz de una longitud de onda adecuada.', o: ['fotopolimerizables', 'termopolimerizables', 'autopolimerizables'], a: 0, e: 'Se usan en cubetas, bases de registro y otros trabajos específicos.' },
+      { q: 'Las masas cerámicas (dentina, esmalte, incisal) deben estar identificadas por ____ y tonalidad.', o: ['colores', 'precios', 'tamaños'], a: 0, e: 'Así se evitan confusiones entre tonalidades y sistemas cerámicos.' },
+      { q: '¿Para qué se usa el yeso tipo III?', o: ['Yeso piedra para modelos de trabajo y prótesis completas', 'Para cerámica de tonos', 'Para impresiones de silicona', 'Para cubetas de resina'], a: 0, e: 'Es el yeso habitual para modelos de trabajo y modelos de prótesis completas.' },
+      { q: '¿Qué le ocurre al yeso si se almacena mal?', o: ['Absorbe humedad y puede fraguar parcialmente', 'Se vuelve más resistente', 'Cambia de color', 'Se convierte en resina'], a: 0, e: 'Esto altera su tiempo de fraguado y perjudica el modelo obtenido.' },
+      { q: '¿Cómo deben almacenarse los yesos?', o: ['En un lugar seco, en su envase original cerrado y sobre estanterías o palés', 'En el suelo y al aire libre', 'Mezclados con líquidos', 'Sin etiquetar'], a: 0, e: 'Deben identificarse por tipo, fabricante y fecha de caducidad.' },
+      { q: '¿Para qué se utilizan los alginatos?', o: ['Impresiones preliminares y determinados modelos', 'Coronas de porcelana', 'Bases de prótesis completas', 'Fresado de circonio'], a: 0, e: 'Son materiales de impresión elásticos.' },
+      { q: 'Las siliconas por adición se caracterizan por…', o: ['Su gran precisión dimensional', 'Ser metálicas', 'No ser elastoméricas', 'Ser comestibles'], a: 0, e: 'Son materiales elastoméricos que ofrecen gran precisión dimensional.' },
+      { q: 'Las resinas termopolimerizables se polimerizan con…', o: ['Calor', 'Luz azul únicamente', 'Agua fría', 'Ultrasonidos'], a: 0, e: 'Necesitan un proceso de polimerización mediante calor, siguiendo el protocolo correspondiente.' },
+      { q: '¿Qué riesgo tiene una resina mal almacenada?', o: ['Puede alterar sus propiedades y algunos monómeros pueden producir vapores inflamables', 'Se vuelve transparente', 'Pierde el olor', 'Aumenta su peso'], a: 0, e: 'Por eso hay que guardar los monómeros según su peligrosidad y su ficha de datos de seguridad.' },
+      { q: '¿Para qué se usan las cerámicas dentales en el laboratorio?', o: ['Coronas, carillas y componentes de prótesis fija', 'Cubetas de alginato', 'Dientes de resina para removibles', 'Bases de yeso'], a: 0, e: 'Se usan para restauraciones con buenas propiedades estéticas.' },
+      { q: '¿Cómo deben conservarse los bloques y discos CAD/CAM cerámicos?', o: ['En sus envases o soportes adecuados para evitar daños', 'Al aire libre', 'Sin ninguna protección', 'Mezclados con yeso'], a: 0, e: 'Deben conservarse en sus envases o soportes para evitar daños.' },
+      { q: '¿Qué aleaciones metálicas se citan para la fabricación de estructuras?', o: ['Cromo-cobalto, titanio, preciosas y semipreciosas', 'Plata pura y plomo', 'Vidrio y cobre', 'Madera y papel'], a: 0, e: 'Son las aleaciones más frecuentes en el laboratorio.' },
+      { q: '¿Qué hay que registrar cuando se trabaja con metales de alto coste?', o: ['Las entradas y salidas', 'Nada, porque no es necesario', 'El color del metal', 'El nombre del paciente'], a: 0, e: 'Es importante registrar entradas y salidas en los metales de alto coste.' },
+      { q: '¿Por qué conviene clasificar los dientes artificiales por tonalidad, forma y tamaño?', o: ['Para evitar confusiones y localizarlos con facilidad', 'Para venderlos más caros', 'Para pintarlos', 'No tiene ninguna utilidad'], a: 0, e: 'Una clasificación correcta facilita la localización y evita confusiones.' },
+      { q: 'Los dientes artificiales se usan principalmente en…', o: ['Prótesis removibles, completas y parciales', 'Implantes quirúrgicos', 'Ortodoncia fija', 'Férulas de blanqueamiento'], a: 0, e: 'Se utilizan en la elaboración y reparación de prótesis removibles.' }
+    ]
+  },
+  {
+    id: '2.3', unit: 2, title: 'Clasificación de materiales: FIFO, FEFO y ABC', pages: '',
+    notes: [
+      'FIFO (first in, first out): se usa primero lo que entró antes, siempre que esté en condiciones adecuadas.',
+      'FEFO (first expired, first out): se usa primero lo que caduca antes, sin importar cuándo se recibió. Es especialmente importante en resinas y adhesivos.',
+      'Materiales fungibles (se consumen con el uso, como yeso, cera o resina) e inventariables (equipos e instrumentos de larga duración, como el articulador, el micromotor o el vibrador).',
+      'Clasificación ABC: grupo A (alto valor y pocas unidades, como el articulador o la prensa), grupo B (valor y cantidad intermedios, como fresas y espátulas) y grupo C (bajo coste y elevado consumo, como rodetes y planchas de cera).',
+      'Según sus condiciones: sin exigencias especiales (yeso, cubetas, cajas e instrumental no estéril), estéril (hay que comprobar el envase, el indicador y la caducidad), lábil (perecederos, termolábiles y fotosensibles) y peligroso (inflamables, corrosivos o tóxicos, con pictogramas).',
+      'Los materiales caducados han perdido sus propiedades. Deben separarse del resto y eliminarse según la normativa de residuos sanitarios.',
+      'Para organizar el almacén: clasificar por función, identificar con etiquetas, colocar en zonas accesibles lo de uso frecuente, separar lo que requiere condiciones especiales y registrar entradas, salidas y caducidades.'
+    ],
+    qs: [
+      { q: 'En el método ____ se usan primero los productos que caducan antes, sin importar cuándo se recibieron.', o: ['FEFO', 'FIFO', 'ABC'], a: 0, e: 'FEFO significa «first expired, first out»: primero en caducar, primero en salir.' },
+      { q: 'Los materiales del grupo ____ tienen alto valor y pocas unidades, como el articulador o la prensa.', o: ['A', 'B', 'C'], a: 0, e: 'El grupo A agrupa los materiales de mayor valor y menor número de unidades.' },
+      { q: 'El yeso, la cera y la resina son materiales ____, porque se consumen con el uso.', o: ['fungibles', 'inventariables', 'estériles'], a: 0, e: 'Los materiales inventariables son los equipos e instrumentos de larga duración.' },
+      { q: 'En el método FIFO, ¿qué se utiliza primero?', o: ['El producto que entró antes', 'El que caduca antes', 'El más caro', 'El que está más lejos'], a: 0, e: 'FIFO significa «first in, first out»: primero en entrar, primero en salir.' },
+      { q: 'Según el temario, ¿en qué se basa el FEFO?', o: ['En la fecha de caducidad', 'En la fecha de entrada', 'En el precio', 'En el color'], a: 0, e: 'FIFO se basa en la fecha de entrada y FEFO en la fecha de caducidad.' },
+      { q: '¿Qué diferencia hay entre FIFO y FEFO?', o: ['FIFO se basa en la entrada y FEFO en la caducidad', 'FIFO se basa en el precio y FEFO en el color', 'Son exactamente lo mismo', 'FIFO solo sirve para cerámica'], a: 0, e: 'Por eso el FEFO prioriza la fecha de caducidad y no la de recepción.' },
+      { q: '¿Qué materiales son inventariables?', o: ['Equipos e instrumentos de larga duración, como el articulador o el micromotor', 'Yeso y cera', 'Resinas y adhesivos', 'Dientes acrílicos'], a: 0, e: 'Son los equipos e instrumentos de larga duración.' },
+      { q: 'Según la clasificación ABC, el grupo C agrupa…', o: ['Materiales de bajo coste y elevado consumo, como rodetes y planchas de cera', 'Materiales de alto valor, como los articuladores', 'Materiales peligrosos', 'Equipos de larga duración'], a: 0, e: 'El grupo C tiene bajo coste y elevado consumo.' },
+      { q: 'Un material estéril debe rechazarse si…', o: ['El envase está deteriorado', 'Está guardado en un cajón', 'Tiene una etiqueta', 'Es de color claro'], a: 0, e: 'Hay que comprobar el envase, el indicador de esterilización y la fecha de caducidad.' },
+      { q: 'Los materiales lábiles son…', o: ['Los que se deterioran fácilmente, como los termolábiles o fotosensibles', 'Los inflamables', 'Los estériles', 'Los inventariables'], a: 0, e: 'Son perecederos, sensibles al calor o a la luz, o se deterioran con facilidad.' },
+      { q: '¿Qué identifica a los materiales peligrosos?', o: ['Los pictogramas de seguridad', 'Los números de lote', 'El color de las etiquetas', 'La fecha de entrada'], a: 0, e: 'Son sustancias que pueden causar daños y necesitan almacenamiento y manipulación especiales.' },
+      { q: 'Los materiales termolábiles son…', o: ['Sensibles al calor', 'Resistentes a cualquier temperatura', 'Siempre metálicos', 'Inflamables por definición'], a: 0, e: 'Por eso se conservan a temperaturas concretas, por ejemplo entre 2 y 8 ºC.' },
+      { q: 'Los materiales fotosensibles deben…', o: ['Protegerse de la luz', 'Guardarse al sol', 'Mezclarse con agua', 'Congelarse siempre'], a: 0, e: 'Un ejemplo son las planchas fotopolimerizables.' },
+      { q: '¿Qué se hace con los materiales caducados?', o: ['Separarlos del resto y eliminarlos según la normativa de residuos sanitarios', 'Usarlos igual', 'Guardarlos mezclados con los demás', 'Venderlos'], a: 0, e: 'Han perdido sus propiedades y no pueden usarse.' },
+      { q: '¿Qué ejemplos de materiales caducados cita el temario?', o: ['Resinas, adhesivos o siliconas con la fecha superada', 'Dientes acrílicos', 'Cubetas de plástico', 'Articuladores'], a: 0, e: 'Son materiales que han superado su fecha de caducidad.' },
+      { q: '¿Qué materiales se incluyen en el grupo sin exigencias especiales?', o: ['Yeso, cubetas, cajas e instrumental no estéril', 'Monómeros inflamables', 'Material estéril de la clínica', 'Circonio caducado'], a: 0, e: 'Se conservan en condiciones normales de limpieza, temperatura, ventilación y humedad.' }
+    ]
+  },
+  {
+    id: '2.4', unit: 2, title: 'Gestión del almacén: pedidos, inventario y trazabilidad', pages: '',
+    notes: [
+      'Aprovisionamiento: adquirir los materiales, productos y consumibles que se necesitan a diario. Se planifica según el consumo, la caducidad, el espacio, el tiempo de suministro y el coste.',
+      'Punto de pedido = consumo medio diario × plazo de entrega + stock de seguridad. Ejemplo: 4 envases al día, 5 días de entrega y 10 de seguridad dan 30 envases.',
+      'Compra programada: reposición antes de agotarse. Compra urgente: cuando un material imprescindible se termina de forma inesperada.',
+      'Ficha de almacén: registra cada entrada y salida de un material (referencia, proveedor, lote, caducidad, cantidades y existencias).',
+      'Inventario: recuento físico de los materiales para compararlo con los registros. Detecta material caducado, deteriorado, agotado o errores de registro.',
+      'Trazabilidad: identificar el recorrido de un producto, con su fabricante, lote, fecha de recepción, caducidad y trabajo en el que se utilizó.',
+      'Caducados o deteriorados: identificar, separar, señalizar, registrar, gestionar la devolución o eliminación y actualizar las existencias.',
+      'Indicadores: valor del stock, material caducado, roturas de stock, consumo mensual, tiempo de entrega y compras urgentes.'
+    ],
+    qs: [
+      { q: 'El punto de ____ es el nivel de existencias a partir del cual debemos solicitar nuevas unidades.', o: ['pedido', 'inventario', 'caducidad'], a: 0, e: 'Sirve para evitar quedarnos sin material.' },
+      { q: 'La ____ registra todos los movimientos de entrada y salida de un material.', o: ['ficha de almacén', 'factura del proveedor', 'receta del doctor'], a: 0, e: 'Cada producto tiene su propia ficha con los datos necesarios para su trazabilidad.' },
+      { q: 'La ____ permite identificar y seguir el recorrido de un producto a través de los registros.', o: ['trazabilidad', 'publicidad', 'garantía comercial'], a: 0, e: 'Permite saber qué lote se usó, cuándo se recibió y en qué trabajo se empleó.' },
+      { q: 'Calcula el punto de pedido si el consumo diario es de 4 envases, el plazo de entrega de 5 días y el stock de seguridad de 10.', o: ['30 envases', '20 envases', '15 envases', '50 envases'], a: 0, e: 'Punto de pedido = (4 × 5) + 10 = 30 envases.' },
+      { q: '¿Qué tipo de compra se hace cuando un material imprescindible se termina de forma inesperada?', o: ['Compra urgente', 'Compra programada', 'Compra trimestral', 'Compra en subasta'], a: 0, e: 'Se necesita una reposición inmediata.' },
+      { q: '¿Cuál de estos factores NO aparece entre los que condicionan la planificación de compras?', o: ['La altura del técnico', 'El consumo habitual', 'La fecha de caducidad', 'El tiempo de suministro'], a: 0, e: 'Los factores del temario son el consumo, la caducidad, el espacio, el tiempo de suministro y el coste.' },
+      { q: '¿Qué datos incluye una ficha de almacén?', o: ['Lote, fecha de caducidad, cantidades recibidas, utilizadas y existencias', 'Solo el nombre del técnico', 'Solo el color del material', 'La dirección del paciente'], a: 0, e: 'Registra nombre, referencia, proveedor, fecha, lote, caducidad y cantidades.' },
+      { q: '¿Qué detecta un inventario?', o: ['Material caducado, deteriorado, agotado o errores de registro', 'Solo el precio de la luz', 'El horario del personal', 'Las preferencias de los clientes'], a: 0, e: 'Consiste en comparar el recuento físico con los registros del laboratorio.' },
+      { q: '¿Cuál es la primera fase de un inventario?', o: ['Localizar los materiales', 'Corregir diferencias', 'Comprar material', 'Enviar la factura'], a: 0, e: 'Después se cuentan las existencias, se revisan caducidades, se comparan con las fichas y se corrigen diferencias.' },
+      { q: '¿Qué hay que hacer con tres envases de resina caducados encontrados en una estantería?', o: ['Identificarlos, separarlos, señalizarlos, registrarlos y actualizar las existencias', 'Dejarlos donde están', 'Usarlos con cuidado', 'Regalarlos al paciente'], a: 0, e: 'No basta con tirarlos: hay que corregir las existencias para que el inventario sea fiable.' },
+      { q: 'Si se detecta un problema con un lote de resina, ¿qué permite localizar el registro?', o: ['Las unidades almacenadas y los trabajos relacionados con ese lote', 'Las cuentas bancarias', 'Las vacaciones del personal', 'Los precios de la competencia'], a: 0, e: 'La trazabilidad permite revisar qué trabajos pueden estar relacionados con ese lote.' },
+      { q: '¿Qué indicador mide cuántas veces nos quedamos sin un material necesario?', o: ['Roturas de stock', 'Valor del stock', 'Consumo mensual', 'Tiempo de entrega'], a: 0, e: 'Mide las veces que falta un material necesario.' },
+      { q: '¿Qué indicador mide cuánto tardan los proveedores en suministrar los pedidos?', o: ['Tiempo de entrega', 'Valor del stock', 'Compras urgentes', 'Material caducado'], a: 0, e: 'Es el plazo de entrega, uno de los datos del punto de pedido.' },
+      { q: '¿Qué es el stock de seguridad?', o: ['La cantidad adicional que se mantiene para prevenir imprevistos', 'El stock que se vende', 'Un tipo de yeso', 'Un material de impresión'], a: 0, e: 'Se mantiene además del consumo previsto, por si hay imprevistos.' },
+      { q: '¿Para qué sirve el inventario?', o: ['Comprobar que el recuento físico coincide con los registros', 'Diseñar prótesis', 'Decidir el color de las paredes', 'Medir la temperatura del paciente'], a: 0, e: 'Un inventario actualizado facilita la planificación de futuras compras.' },
+      { q: '¿Qué significa aprovisionamiento?', o: ['Adquirir los materiales, productos y consumibles necesarios para el trabajo diario', 'Cobrar a los pacientes', 'Diseñar en CAD', 'Limpiar la decantadora'], a: 0, e: 'Es el conjunto de actividades para conseguir los materiales del laboratorio.' }
+    ]
+  },
+  {
+    id: '2.5', unit: 2, title: 'Sistemas informáticos de gestión', pages: '',
+    notes: [
+      'Las aplicaciones informáticas automatizan tareas como la contabilidad, la redacción de documentos o la gestión del almacén. En el laboratorio agilizan la gestión comercial, la facturación, el control de almacén y la posventa.',
+      'Programas habituales para laboratorios: Vevi Dental y PC Dental, entre otros.',
+      'Funciones: relación con clientes y proveedores; gestión de almacén (existencias, materias primas y envases); facturación (presupuestos, pedidos, albaranes y facturas); posventa (organización de la información, quejas y reclamaciones).',
+      'Vevi Dental se usa en línea, así que cada trabajador puede acceder incluso desde casa. La pantalla principal muestra un resumen: notificaciones, pedidos y paquetes pendientes.',
+      'Vevi Dental tiene cinco apartados: Trabajos, Facturación, Almacén y gastos, Laboratorio y Análisis.',
+      'Seguridad de la información: contraseñas seguras e individuales, no compartir credenciales, copias de seguridad, acceso limitado según las funciones, programas actualizados y cumplimiento de la protección de datos.'
+    ],
+    qs: [
+      { q: 'Para proteger la información hay que usar contraseñas seguras e ____.', o: ['individuales', 'compartidas', 'públicas'], a: 0, e: 'Nunca deben compartirse las credenciales de acceso.' },
+      { q: 'Es importante hacer ____ de seguridad de la información del laboratorio.', o: ['copias', 'publicidades', 'rebajas'], a: 0, e: 'Así se evitan pérdidas de datos.' },
+      { q: 'El apartado ____ de Vevi Dental gestiona clientes, doctores y el listado de productos con su precio.', o: ['Laboratorio', 'Análisis', 'Facturación'], a: 0, e: 'Dentro de este apartado también se crean las tareas y se identifican las fases de cada producto.' },
+      { q: '¿Para qué sirven las aplicaciones informáticas en el laboratorio?', o: ['Agilizar la gestión comercial, la facturación y el control de almacén', 'Fabricar cerámica', 'Sustituir a los instrumentos', 'Hacer radiografías'], a: 0, e: 'Se encargan de la parte burocrática y agilizan el trabajo.' },
+      { q: '¿Qué programas se citan como ejemplos de gestión de laboratorios?', o: ['Vevi Dental y PC Dental', 'Word y Excel', 'Photoshop y Paint', 'Chrome y Firefox'], a: 0, e: 'Son programas suministrados por diferentes proveedores.' },
+      { q: '¿Qué permite Vevi Dental?', o: ['Acceder en línea desde cualquier lugar, incluso desde casa', 'Funcionar solo sin internet', 'Solo imprimir etiquetas', 'Fabricar prótesis'], a: 0, e: 'Es un sistema que se usa en línea.' },
+      { q: 'En el apartado Trabajos de Vevi Dental, ¿qué se puede hacer?', o: ['Asignar fases a cada trabajador y controlar los retrasos', 'Calcular los impuestos de la empresa', 'Diseñar páginas web', 'Pedir cita al paciente'], a: 0, e: 'También permite relacionar el trabajo con las materias primas y el lote.' },
+      { q: 'El apartado Análisis de Vevi Dental sirve para…', o: ['Control estadístico, control de cobros y trabajo realizado por empleado', 'Diseñar prótesis', 'Recibir materiales', 'Limpiar instrumentos'], a: 0, e: 'Es el apartado relacionado con el control estadístico y el análisis de los datos.' },
+      { q: 'En la facturación se gestionan…', o: ['Facturas, recibos, albaranes y etiquetas', 'Radiografías', 'Historias clínicas', 'Recetas de cocina'], a: 0, e: 'También se emiten las declaraciones de conformidad.' },
+      { q: '¿Qué medida evita el acceso no autorizado a la información?', o: ['Limitar el acceso según las funciones de cada trabajador', 'Compartir siempre la contraseña', 'Dejar la sesión abierta', 'Apuntar las contraseñas en la pantalla'], a: 0, e: 'Cada trabajador debe tener solo el acceso que necesita.' },
+      { q: '¿Qué no debe hacerse con los datos de pacientes?', o: ['Introducirlos en aplicaciones no autorizadas', 'Protegerlos', 'Hacer copias de seguridad', 'Cumplir la normativa'], a: 0, e: 'Hay que evitar introducir datos de pacientes en aplicaciones no autorizadas.' },
+      { q: '¿Qué incluye la posventa en los programas de gestión?', o: ['Organizar y archivar la información posventa y gestionar quejas y reclamaciones', 'Vender el laboratorio', 'Diseñar la clínica', 'Pintar las paredes'], a: 0, e: 'Se registran y archivan las quejas y reclamaciones.' },
+      { q: '¿Qué muestra la pantalla principal de Vevi Dental al entrar?', o: ['Un resumen del laboratorio con notificaciones y pedidos pendientes', 'Un juego', 'Una página de publicidad', 'Una pantalla en blanco'], a: 0, e: 'Muestra la situación del laboratorio: notificaciones, pedidos y paquetes por enviar.' },
+      { q: '¿Qué función tiene la gestión de almacén en un programa informático?', o: ['Generar archivos de existencias, materias primas y envases', 'Cobrar a los clientes en efectivo', 'Medir la temperatura', 'Imprimir radiografías'], a: 0, e: 'Permite llevar el control de existencias y de los sistemas de almacenes.' },
+      { q: '¿Qué permite el apartado Almacén y gastos de Vevi Dental?', o: ['Controlar materias primas, pedidos, inventario, proveedores y lotes', 'Diseñar prótesis en CAD', 'Atender llamadas', 'Dar de alta pacientes en la clínica'], a: 0, e: 'Es el apartado para gestionar el almacén y el inventario.' }
+    ]
+  }
+];
+
+/* ===== DERIVADOS: banco de preguntas, exámenes mixtos y utilidades ===== */
+const ALL = [];
+TOPICS.forEach(t => t.qs.forEach((x, i) => ALL.push({ id: t.id + '-' + (i + 1), tid: t.id, unit: t.unit, q: x.q, o: x.o, a: x.a, e: x.e })));
+/* Reparte la respuesta correcta por las posiciones de forma uniforme, por número de opciones */
+const seen = {};
+ALL.forEach(x => {
+  const len = x.o.length;
+  seen[len] = (seen[len] || 0) + 1;
+  const target = (seen[len] - 1) % len;
+  const correct = x.o[x.a];
+  const others = x.o.filter((_, k) => k !== x.a);
+  x.o = [...others.slice(0, target), correct, ...others.slice(target)];
+  x.a = target;
+});
+const BY_ID = {};
+ALL.forEach(x => { BY_ID[x.id] = x; });
+
+function mulberry32(seed) {
+  return function () {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function shuffle(arr, seed) {
+  const r = mulberry32(seed);
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(r() * (i + 1));
+    const tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+/* Preguntas de una unidad intercaladas entre sus puntos */
+function unitPool(u) {
+  const ts = TOPICS.filter(t => t.unit === u);
+  const n = Math.max(...ts.map(t => t.qs.length));
+  const out = [];
+  for (let i = 0; i < n; i++) ts.forEach(t => { const x = BY_ID[t.id + '-' + (i + 1)]; if (x) out.push(x); });
+  return out;
+}
+/* Cada examen toma bloques disjuntos de cada unidad: 25 + 25 = 50 preguntas */
+const EXAM_K = { 1: 25, 2: 25 };
+const EXAMS = [0, 1, 2].map(e => {
+  let list = [];
+  UNIT_IDS.forEach(u => { list = list.concat(shuffle(unitPool(u), 31 * u + 7).slice(e * EXAM_K[u], (e + 1) * EXAM_K[u])); });
+  return shuffle(list, 7919 * (e + 1));
+});
+</script>
+
+<script>
+/* ===== APLICACIÓN ===== */
+const STORE_KEY = 'diseno-protesis-dental-v1';
+let S = { studied: {}, mastered: {}, fails: {}, exams: {}, theme: null };
+try { S = Object.assign(S, JSON.parse(localStorage.getItem(STORE_KEY) || '{}')); } catch (_) {}
+function persist() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (_) {} }
+
+const app = document.getElementById('app');
+const VIEWS = ['temario', 'tests', 'examenes', 'repaso', 'fallos'];
+let view = 'temario';
+let unitFilter = 0;
+let timer = null;
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+const fmt2 = n => n.toFixed(2).replace('.', ',');
+/* Preguntas de hueco: la frase lleva ____ y la respuesta es una de las opciones */
+const hasBlank = x => /_{4,}/.test(x.q);
+const qHTML = x => esc(x.q).replace(/_{4,}/, '<span class="blank" aria-label="hueco"></span>');
+const completed = x => esc(x.q).replace(/_{4,}/, '<b>' + esc(x.o[x.a]) + '</b>');
+const fmtTime = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+const keysOn = obj => Object.keys(obj).filter(k => obj[k] && BY_ID[k]);
+const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark' ||
+  (document.documentElement.getAttribute('data-theme') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+
+function setStats() {
+  document.getElementById('tot-q').textContent = ALL.length;
+  document.getElementById('tot-t').textContent = TOPICS.length;
+  document.getElementById('st-m').textContent = keysOn(S.mastered).length;
+  document.getElementById('st-s').textContent = TOPICS.filter(t => S.studied[t.id]).length;
+  document.getElementById('badge-fails').textContent = keysOn(S.fails).length;
+}
+
+function applyTheme() {
+  if (S.theme) document.documentElement.setAttribute('data-theme', S.theme);
+  else document.documentElement.removeAttribute('data-theme');
+  document.getElementById('theme').textContent = isDark() ? 'Modo claro' : 'Modo oscuro';
+}
+document.getElementById('theme').onclick = () => {
+  S.theme = isDark() ? 'light' : 'dark';
+  persist(); applyTheme();
+};
+
+function go(v) {
+  view = v;
+  clearInterval(timer);
+  document.querySelectorAll('.tabs a').forEach(a => {
+    const on = a.dataset.view === v;
+    a.classList.toggle('on', on);
+    if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  ({ temario: viewTemario, tests: viewTests, examenes: viewExams, repaso: viewRepaso, fallos: viewFallos })[v]();
+  setStats();
+}
+document.querySelectorAll('.tabs a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const v = a.dataset.view;
+    if (location.hash.slice(1) === v) go(v); else location.hash = v;
+  });
+});
+window.addEventListener('hashchange', () => {
+  const h = location.hash.slice(1);
+  go(VIEWS.includes(h) ? h : 'temario');
+});
+
+/* ----- Temario ----- */
+function progressCard() {
+  const done = TOPICS.filter(t => S.studied[t.id]).length;
+  return `<div class="bar"><span style="width:${(done / TOPICS.length) * 100}%"></span></div>
+          <p>${done} de ${TOPICS.length} puntos marcados como repasados</p>`;
+}
+function topicCard(t) {
+  return `
+  <details class="topic" id="t-${t.id}">
+    <summary>
+      <span class="tnum">${t.id}</span>
+      <span class="ttitle">${esc(t.title)}</span>
+      <span class="tmeta">${t.qs.length} preguntas${t.pages ? ' · ' + esc(t.pages) : ''}</span>
+    </summary>
+    <div class="topic-body">
+      <ul class="notes">${t.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>
+      <div class="topic-foot">
+        <label class="check"><input type="checkbox" data-study="${t.id}" ${S.studied[t.id] ? 'checked' : ''}> Punto repasado</label>
+        <button class="btn ghost" type="button" data-test="${t.id}">Hacer test del punto (${t.qs.length})</button>
+      </div>
+    </div>
+  </details>`;
+}
+function viewTemario() {
+  app.innerHTML = `
+    <section class="head-row">
+      <h2>Temario por puntos</h2>
+      <p>Esquemas con los conceptos clave de cada punto. Marca el punto cuando lo hayas repasado y pasa al test.</p>
+    </section>
+    <div class="filters" role="group" aria-label="Filtrar por unidad">
+      ${[0, ...UNIT_IDS].map(u => `<button class="chip ${unitFilter === u ? 'on' : ''}" type="button" data-u="${u}" aria-pressed="${unitFilter === u}">${u ? 'Unidad ' + u : 'Todas'}</button>`).join('')}
+    </div>
+    <div class="progress-card" id="prog">${progressCard()}</div>
+    ${UNIT_IDS.filter(u => !unitFilter || u === unitFilter).map(u => `
+      <section class="unit">
+        <h3 class="unit-title"><span class="unit-n">Unidad ${u}</span>${esc(UNITS[u])}</h3>
+        ${TOPICS.filter(t => t.unit === u).map(topicCard).join('')}
+      </section>`).join('')}`;
+
+  app.querySelectorAll('[data-u]').forEach(b => b.onclick = () => { unitFilter = +b.dataset.u; viewTemario(); setStats(); });
+  app.querySelectorAll('input[data-study]').forEach(cb => cb.onchange = () => {
+    const id = cb.dataset.study;
+    if (cb.checked) S.studied[id] = true; else delete S.studied[id];
+    persist(); setStats();
+    document.getElementById('prog').innerHTML = progressCard();
+  });
+  app.querySelectorAll('[data-test]').forEach(b => b.onclick = () => {
+    const t = TOPICS.find(x => x.id === b.dataset.test);
+    startPractice(ALL.filter(x => x.tid === t.id), `Punto ${t.id} · ${t.title}`, () => go('temario'));
+  });
+}
+
+/* ----- Tests por tema ----- */
+function masteredIn(list) { return list.filter(x => S.mastered[x.id]).length; }
+function viewTests() {
+  app.innerHTML = `
+    <section class="head-row">
+      <h2>Tests por tema</h2>
+      <p>Responde y verás al instante si acertaste, con la explicación. Los aciertos cuentan como «dominadas» y los fallos pasan a «Mis fallos».</p>
+    </section>
+    ${UNIT_IDS.map(u => {
+      const pool = unitPool(u);
+      return `
+      <section class="unit">
+        <h3 class="unit-title"><span class="unit-n">Unidad ${u}</span>${esc(UNITS[u])}</h3>
+        ${TOPICS.filter(t => t.unit === u).map(t => {
+          const qs = ALL.filter(x => x.tid === t.id);
+          return `
+          <div class="test-row">
+            <div><span class="tnum">${t.id}</span> <strong>${esc(t.title)}</strong>
+              <div class="muted small">${qs.length} preguntas · ${masteredIn(qs)} dominadas</div></div>
+            <button class="btn primary" type="button" data-start="${t.id}">Empezar</button>
+          </div>`;
+        }).join('')}
+        <div class="test-row full">
+          <div><strong>Test completo de la Unidad ${u}</strong>
+            <div class="muted small">${pool.length} preguntas de todos sus puntos, mezcladas · ${masteredIn(pool)} dominadas</div></div>
+          <button class="btn" type="button" data-unit="${u}">Empezar</button>
+        </div>
+      </section>`;
+    }).join('')}`;
+
+  app.querySelectorAll('[data-start]').forEach(b => b.onclick = () => {
+    const t = TOPICS.find(x => x.id === b.dataset.start);
+    startPractice(ALL.filter(x => x.tid === t.id), `Punto ${t.id} · ${t.title}`, () => go('tests'));
+  });
+  app.querySelectorAll('[data-unit]').forEach(b => b.onclick = () => {
+    const u = +b.dataset.unit;
+    startPractice(unitPool(u), `Test completo · Unidad ${u}`, () => go('tests'));
+  });
+}
+
+/* ----- Runner de práctica (con corrección inmediata) ----- */
+function reviewItem(x, chosen) {
+  const yours = chosen === undefined ? '' :
+    `<p class="ry">Tu respuesta: ${chosen === null ? '(sin responder)' : esc(x.o[chosen])}</p>`;
+  return `<article class="rev">
+    <p class="meta">Unidad ${x.unit} · ${x.tid}</p>
+    <p class="rq">${qHTML(x)}</p>
+    ${yours}
+    <p class="ra">Correcta: ${esc(x.o[x.a])}</p>
+    <p class="re">${esc(x.e)}</p>
+  </article>`;
+}
+function startPractice(list, title, back) {
+  let i = 0, right = 0;
+  const wrong = [];
+  const total = list.length;
+
+  const render = () => {
+    const x = list[i];
+    app.innerHTML = `
+      <section class="runner">
+        <div class="runner-top">
+          <button class="link" type="button" id="back">← Volver</button>
+          <span class="pill">${esc(title)}</span>
+        </div>
+        <div class="bar thin"><span style="width:${(i / total) * 100}%"></span></div>
+        <p class="muted small" style="margin-top:8px">Pregunta ${i + 1} de ${total} · Unidad ${x.unit} · Punto ${x.tid}</p>
+        <h2 class="qtext">${qHTML(x)}</h2>
+        <div class="opts">
+          ${x.o.map((t, k) => `<button class="opt" type="button" data-k="${k}"><span class="letter">${'ABCD'[k]}</span><span>${esc(t)}</span></button>`).join('')}
+        </div>
+        <div class="fb" id="fb" hidden></div>
+        <div class="actions"><button class="btn primary" type="button" id="next" hidden>${i + 1 < total ? 'Siguiente' : 'Ver resultado'}</button></div>
+      </section>`;
+    document.getElementById('back').onclick = back;
+    app.querySelectorAll('.opt').forEach(b => b.onclick = () => answer(+b.dataset.k));
+  };
+
+  const answer = k => {
+    const x = list[i];
+    const ok = k === x.a;
+    app.querySelectorAll('.opt').forEach((b, j) => {
+      b.disabled = true;
+      if (j === x.a) b.classList.add('ok');
+      else if (j === k) b.classList.add('bad');
+    });
+    if (ok) { right++; S.mastered[x.id] = true; delete S.fails[x.id]; }
+    else { wrong.push(x); S.fails[x.id] = true; delete S.mastered[x.id]; }
+    persist(); setStats();
+
+    const fb = document.getElementById('fb');
+    fb.hidden = false;
+    fb.className = 'fb ' + (ok ? 'ok' : 'bad');
+    fb.innerHTML = `<strong>${ok ? 'Correcto.' : 'Incorrecto.'}</strong> ${ok ? '' : `La respuesta correcta es: <b>${esc(x.o[x.a])}</b>. `}${esc(x.e)}${hasBlank(x) ? `<span class="complete">Frase completa: ${completed(x)}</span>` : ''}`;
+    const next = document.getElementById('next');
+    next.hidden = false;
+    next.onclick = () => { i++; if (i < total) render(); else finish(); };
+  };
+
+  const finish = () => {
+    const pct = Math.round((right / total) * 100);
+    const msg = pct >= 90 ? 'Muy bien: este tema está dominado.'
+      : pct >= 70 ? 'Vas bien. Repasa los fallos antes de seguir.'
+      : 'Vuelve al temario y repasa los puntos antes de repetir.';
+    app.innerHTML = `
+      <section class="runner">
+        <div class="runner-top">
+          <button class="link" type="button" id="back">← Volver</button>
+          <span class="pill">${esc(title)}</span>
+        </div>
+        <div class="result">
+          <p class="big">${right} <span>/ ${total}</span></p>
+          <p class="muted">${pct} % de aciertos. ${msg}</p>
+        </div>
+        ${wrong.length ? `<h3>Para repasar</h3>${wrong.map(x => reviewItem(x, undefined)).join('')}`
+          : '<p class="ok-note">Sin fallos en este test.</p>'}
+        <div class="actions">
+          <button class="btn primary" type="button" id="again">Repetir test</button>
+          <button class="btn ghost" type="button" id="back2">Volver</button>
+        </div>
+      </section>`;
+    document.getElementById('back').onclick = back;
+    document.getElementById('back2').onclick = back;
+    document.getElementById('again').onclick = () => startPractice(list, title, back);
+    setStats();
+  };
+
+  render();
+}
+
+/* ----- Exámenes mixtos ----- */
+function viewExams() {
+  app.innerHTML = `
+    <section class="head-row">
+      <h2>Exámenes mixtos</h2>
+      <p>Tres exámenes de 50 preguntas tipo test que combinan las dos unidades. Tienes 60 minutos. No hay penalización por fallo y la nota se calcula sobre 10. La corrección aparece al entregar.</p>
+    </section>
+    <div class="exam-grid">
+      ${EXAMS.map((list, e) => {
+        const r = S.exams[e];
+        const mix = UNIT_IDS.map(u => `U${u}: ${list.filter(x => x.unit === u).length}`).join(' · ');
+        return `
+        <article class="exam-card">
+          <p class="eyebrow">Examen ${e + 1}</p>
+          <h3>50 preguntas · 60 min</h3>
+          <p class="muted small">${mix}</p>
+          <div class="exam-foot">
+            ${r ? `<span><span class="score">${fmt2(r.score)} / 10</span><br><span class="muted small">Último intento: ${new Date(r.date).toLocaleDateString('es-ES')}</span></span>`
+                : '<span class="muted small">Sin hacer</span>'}
+            <button class="btn primary" type="button" data-exam="${e}">${r ? 'Repetir' : 'Empezar'}</button>
+          </div>
+        </article>`;
+      }).join('')}
+    </div>`;
+  app.querySelectorAll('[data-exam]').forEach(b => b.onclick = () => runExam(+b.dataset.exam));
+}
+
+function runExam(e) {
+  const list = EXAMS[e];
+  const answers = {};
+  let left = 60 * 60;
+  let done = false;
+
+  app.innerHTML = `
+    <section class="runner">
+      <div class="runner-top">
+        <button class="link" type="button" id="back">← Volver a exámenes</button>
+        <span class="pill">Examen ${e + 1}</span>
+      </div>
+      <div class="exam-bar">
+        <span class="clock" id="clock">${fmtTime(left)}</span>
+        <span class="muted small" id="count">0 de ${list.length} respondidas</span>
+        <button class="btn primary" type="button" id="submit">Entregar examen</button>
+      </div>
+      <ol class="exam-list">
+        ${list.map((x, i) => `
+          <li class="exam-q" id="q${i}">
+            <p class="meta">Pregunta ${i + 1} · Unidad ${x.unit} · Punto ${x.tid}</p>
+            <h3>${qHTML(x)}</h3>
+            <div class="opts">
+              ${x.o.map((t, k) => `<button class="opt" type="button" data-i="${i}" data-k="${k}"><span class="letter">${'ABCD'[k]}</span><span>${esc(t)}</span></button>`).join('')}
+            </div>
+          </li>`).join('')}
+      </ol>
+      <div class="actions"><button class="btn primary" type="button" id="submit2">Entregar examen</button></div>
+    </section>`;
+
+  document.getElementById('back').onclick = () => go('examenes');
+  app.querySelectorAll('.exam-q .opt').forEach(b => b.onclick = () => {
+    const i = +b.dataset.i;
+    answers[i] = +b.dataset.k;
+    document.querySelectorAll(`#q${i} .opt`).forEach(o => o.classList.toggle('sel', o === b));
+    document.getElementById('count').textContent = Object.keys(answers).length + ' de ' + list.length + ' respondidas';
+  });
+  document.getElementById('submit').onclick = () => grade('');
+  document.getElementById('submit2').onclick = () => grade('');
+
+  const clock = document.getElementById('clock');
+  timer = setInterval(() => {
+    left--;
+    clock.textContent = fmtTime(Math.max(left, 0));
+    clock.classList.toggle('warn', left <= 300);
+    if (left <= 0) grade('Se acabó el tiempo.');
+  }, 1000);
+
+  function grade(note) {
+    if (done) return;
+    done = true;
+    clearInterval(timer);
+    let correct = 0;
+    const perUnit = {}; UNIT_IDS.forEach(u => { perUnit[u] = [0, 0]; });
+    const wrongs = [];
+    list.forEach((x, i) => {
+      perUnit[x.unit][1]++;
+      if (answers[i] === x.a) {
+        correct++; perUnit[x.unit][0]++;
+        S.mastered[x.id] = true; delete S.fails[x.id];
+      } else {
+        wrongs.push({ x, chosen: answers[i] === undefined ? null : answers[i] });
+        S.fails[x.id] = true; delete S.mastered[x.id];
+      }
+    });
+    const score = correct * 10 / list.length;
+    S.exams[e] = { score, correct, date: Date.now() };
+    persist(); setStats();
+    const unanswered = list.length - Object.keys(answers).length;
+
+    app.innerHTML = `
+      <section class="runner">
+        <div class="runner-top">
+          <button class="link" type="button" id="back">← Volver a exámenes</button>
+          <span class="pill">Examen ${e + 1}</span>
+        </div>
+        ${note ? `<p class="muted" style="margin-top:8px">${esc(note)}</p>` : ''}
+        <div class="result">
+          <p class="big">${fmt2(score)} <span>/ 10</span></p>
+          <p class="muted">${correct} de ${list.length} correctas${unanswered ? ' · ' + unanswered + ' sin responder' : ''}</p>
+        </div>
+        <h3>Diagnóstico por unidad</h3>
+        <div style="margin-top:8px">
+          ${UNIT_IDS.map(u => {
+            const [c, t] = perUnit[u];
+            return `<div class="diag"><span>Unidad ${u} · ${esc(UNITS[u])}</span>
+              <div class="bar thin"><span style="width:${t ? (c / t) * 100 : 0}%"></span></div><b>${c}/${t}</b></div>`;
+          }).join('')}
+        </div>
+        ${wrongs.length ? `<h3 style="margin-top:26px">Revisión de fallos</h3>${wrongs.map(w => reviewItem(w.x, w.chosen)).join('')}`
+          : '<p class="ok-note">Examen perfecto.</p>'}
+        <div class="actions"><button class="btn primary" type="button" id="again">Repetir examen</button></div>
+      </section>`;
+    document.getElementById('back').onclick = () => go('examenes');
+    document.getElementById('again').onclick = () => runExam(e);
+  }
+}
+
+/* ----- Repaso express (tarjetas) ----- */
+let deck = [], idx = 0, flipped = false, cardUnit = 0;
+function viewRepaso() {
+  deck = shuffle(ALL.filter(x => !cardUnit || x.unit === cardUnit), Date.now() % 100000);
+  idx = 0; flipped = false;
+  renderCard();
+}
+function renderCard() {
+  const filters = `<div class="filters" role="group" aria-label="Filtrar tarjetas por unidad">
+      ${[0, ...UNIT_IDS].map(u => `<button class="chip ${cardUnit === u ? 'on' : ''}" type="button" data-cu="${u}" aria-pressed="${cardUnit === u}">${u ? 'Unidad ' + u : 'Todas'}</button>`).join('')}
+    </div>`;
+  const head = `<section class="head-row">
+      <h2>Repaso express</h2>
+      <p>Lee la pregunta, piensa la respuesta y pulsa la tarjeta para comprobarla. Repite las que no sepas.</p>
+    </section>`;
+  if (!deck.length) {
+    app.innerHTML = `${head}${filters}
+      <div class="empty"><p><strong>Has repasado todas las tarjetas.</strong></p>
+      <p class="muted small" style="margin:6px 0 14px">Baraja otra vez para empezar de nuevo.</p>
+      <button class="btn primary" type="button" id="reshuffle">Barajar</button></div>`;
+  } else {
+    const x = deck[idx];
+    app.innerHTML = `${head}${filters}
+      <div class="flash-wrap">
+        <button class="flash ${flipped ? 'flipped' : ''}" type="button" id="card" aria-label="Voltear tarjeta">
+          <span class="flash-in">
+            <span class="face front">
+              <span class="tag">Unidad ${x.unit} · ${x.tid}</span>
+              <span class="ftext">${qHTML(x)}</span>
+              <span class="hint">Pulsa la tarjeta para ver la respuesta</span>
+            </span>
+            <span class="face back">
+              <span class="tag">Respuesta</span>
+              <span class="ftext">${hasBlank(x) ? completed(x) : esc(x.o[x.a])}</span>
+              <span class="fexp">${esc(x.e)}</span>
+            </span>
+          </span>
+        </button>
+        <p class="muted small" style="margin-top:12px">Tarjeta ${idx + 1} de ${deck.length}</p>
+        <div class="actions" style="justify-content:center">
+          <button class="btn ghost" type="button" id="later">Repetir más tarde</button>
+          <button class="btn primary" type="button" id="know">La sé</button>
+        </div>
+        <div style="margin-top:14px"><button class="link" type="button" id="reshuffle">Barajar</button></div>
+      </div>`;
+    document.getElementById('card').onclick = () => {
+      flipped = !flipped;
+      document.getElementById('card').classList.toggle('flipped', flipped);
+    };
+    document.getElementById('later').onclick = () => {
+      deck.push(deck.splice(idx, 1)[0]);
+      if (idx >= deck.length) idx = 0;
+      flipped = false; renderCard();
+    };
+    document.getElementById('know').onclick = () => {
+      deck.splice(idx, 1);
+      if (idx >= deck.length) idx = 0;
+      flipped = false; renderCard();
+    };
+  }
+  const rs = document.getElementById('reshuffle');
+  if (rs) rs.onclick = viewRepaso;
+  app.querySelectorAll('[data-cu]').forEach(b => b.onclick = () => { cardUnit = +b.dataset.cu; viewRepaso(); });
+}
+
+/* ----- Mis fallos ----- */
+function viewFallos() {
+  const list = keysOn(S.fails).map(id => BY_ID[id]);
+  app.innerHTML = `
+    <section class="head-row">
+      <h2>Mis fallos</h2>
+      <p>Preguntas que has fallado en tests y exámenes. Desaparecen cuando las aciertas.</p>
+    </section>
+    ${list.length ? `
+      <div class="actions start">
+        <button class="btn primary" type="button" id="rep">Repasar ${list.length} ${list.length === 1 ? 'fallo' : 'fallos'}</button>
+        <button class="btn ghost" type="button" id="clear">Vaciar lista</button>
+      </div>
+      ${list.map(x => reviewItem(x, undefined)).join('')}`
+      : `<div class="empty"><p><strong>No tienes fallos guardados.</strong></p>
+         <p class="muted small" style="margin-top:6px">Cuando falles una pregunta en un test o un examen, aparecerá aquí.</p></div>`}`;
+  const rep = document.getElementById('rep');
+  if (rep) rep.onclick = () => startPractice(list, 'Repaso de fallos', () => go('fallos'));
+  const clr = document.getElementById('clear');
+  if (clr) clr.onclick = () => { S.fails = {}; persist(); go('fallos'); };
+}
+
+/* ----- Arranque ----- */
+applyTheme();
+const startView = location.hash.slice(1);
+go(VIEWS.includes(startView) ? startView : 'temario');
+</script>
+
+</body>
+</html>
