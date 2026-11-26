@@ -461,6 +461,17 @@ main { padding-block: 26px 48px; min-height: 60vh; }
 .exam-q .meta { font-size: 12px; color: var(--muted); font-weight: 600; }
 .exam-q h3 { margin: 4px 0 12px; font-size: 16px; line-height: 1.4; }
 
+/* Preguntas con foto */
+.qimg { display: block; margin: 0 0 14px; }
+.qimg img { display: block; max-width: 100%; max-height: 300px; width: auto; height: auto; margin: 0 auto;
+  background: #fff; padding: 8px; border: 1px solid var(--line); border-radius: 14px; }
+.exam-q .qimg img { max-height: 240px; margin: 0; }
+.rev .qimg img { max-height: 130px; margin: 6px 0; padding: 4px; }
+.flash .qimg img { max-height: 170px; }
+.qcredit { display: block; margin-top: 4px; font-size: 11px; font-weight: 400; color: var(--muted); text-align: center; }
+.pic-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px;
+  background: var(--pop-soft); color: var(--pop-ink); vertical-align: middle; margin-left: 6px; }
+
 /* Repaso express: tarjetas */
 .flash-wrap { max-width: 640px; margin: 0 auto; text-align: center; }
 .flash {
@@ -881,9 +892,65 @@ const TOPICS = [
   }
 ];
 
+/* ===== PREGUNTAS CON FOTO: ¿qué es esto? (fotos de las unidades 1 y 2) ===== */
+const PHOTO_QS = {
+  '1.3': [
+    { img: 'img/areaescayola.jpg', q: 'Esta zona tiene punto de agua corriente y fregadero con decantadora, y es la primera por la que pasan los trabajos que llegan de la clínica. ¿Qué área es?', o: ['Área de escayola', 'Área de cerámica', 'Despacho', 'Área digital'], a: 0, e: 'En el área de escayola se positivan las impresiones, se preparan los modelos y se montan en el articulador.' },
+    { img: 'img/areadigital.jpg', q: '¿Qué área del laboratorio aparece en la foto?', o: ['Área digital (CAD/CAM)', 'Área de escayola', 'Almacén', 'Vestuarios'], a: 0, e: 'Tiene ordenadores con software CAD, escáner de laboratorio, fresadora e impresora 3D.' },
+    { img: 'img/areaceramica.jpg', q: 'Zona de trabajo limpia, con horno y pantalla para la toma de color. ¿Qué área es?', o: ['Área de cerámica', 'Área de escayola', 'Área metálica', 'Despacho'], a: 0, e: 'En el área de cerámica se monta la cerámica sobre coronas, puentes e implantes; suele estar separada para mantenerla limpia.' },
+    { img: 'img/despacho.jpg', q: 'En esta zona se hacen las tareas administrativas y se reciben pedidos y prescripciones. ¿Cómo se llama?', o: ['Despacho', 'Área de fabricación', 'Almacén', 'Área de escayola'], a: 0, e: 'El despacho tiene el mobiliario para la administración y el archivo documental de los productos fabricados.' },
+    { img: 'img/almacen.jpg', q: '¿Qué zona del laboratorio se ve en la foto?', o: ['Almacén', 'Área de cerámica', 'Área digital', 'Vestuario'], a: 0, e: 'En el almacén se guardan materiales y productos sanitarios controlando caducidades, lotes, condiciones y stock.' }
+  ],
+  '1.4': [
+    { img: 'img/recortadora.jpg', q: '¿Qué máquina es esta?', o: ['Recortadora de modelos', 'Pulidora', 'Arenadora', 'Vibradora'], a: 0, e: 'Recorta el exceso de escayola de los modelos para poder adaptarlos al articulador.' },
+    { img: 'img/articulador.jpg', q: '¿Qué instrumento aparece en la foto?', o: ['Articulador', 'Paralelómetro', 'Calibrador', 'Prensa hidráulica'], a: 0, e: 'El articulador reproduce en el laboratorio la articulación temporomandibular del paciente.' },
+    { img: 'img/banoultrasonidos.jpg', q: '¿Qué aparato es este?', o: ['Baño de ultrasonidos', 'Baño electrolítico', 'Polimerizadora', 'Vaporeta'], a: 0, e: 'Limpia restos de escayola, revestimiento, etc. de prótesis, fresas o instrumentos mediante ultrasonidos.' },
+    { img: 'img/prensa.jpg', q: '¿Qué equipo del área de resina se ve en la foto?', o: ['Prensa hidráulica', 'Paralelómetro', 'Recortadora de modelos', 'Micromotor'], a: 0, e: 'La prensa hidráulica forma parte del equipamiento para fabricar prótesis removibles de resina.' },
+    { img: 'img/pulidora.jpg', q: '¿Qué máquina es esta?', o: ['Pulidora', 'Recortadora de modelos', 'Arenadora', 'Termomoldeadora'], a: 0, e: 'La pulidora se usa para pulir las prótesis; es equipamiento habitual del área de resina.' },
+    { img: 'img/polimerizadora.jpg', q: '¿Qué aparato del área de resina aparece en la foto?', o: ['Polimerizadora', 'Horno de cerámica', 'Baño de ultrasonidos', 'Duplicadora'], a: 0, e: 'La polimerizadora polimeriza la resina acrílica de las prótesis removibles.' },
+    { img: 'img/olla.jpg', q: '¿Qué es este aparato?', o: ['Olla hidroneumática', 'Mufla', 'Vaporeta', 'Baño electrolítico'], a: 0, e: 'La olla hidroneumática polimeriza la resina en frío o en caliente bajo presión.' },
+    { img: 'img/arenadora.jpg', q: '¿Qué máquina del área metálica es esta?', o: ['Arenadora', 'Horno de precalentamiento', 'Pulidora', 'Vibradora'], a: 0, e: 'Es un aparato de chorreado: limpia el revestimiento de las prótesis metálicas cuando salen del cilindro.' },
+    { img: 'img/paralelometro.jpg', q: '¿Qué instrumento es este?', o: ['Paralelómetro', 'Articulador', 'Micromotor', 'Calibrador'], a: 0, e: 'El paralelómetro (o paralelizador) determina el eje de inserción de la prótesis.' },
+    { img: 'img/paralelometro2.jpg', q: '¿Para qué sirve el instrumento de la foto?', o: ['Para determinar el eje de inserción de la prótesis', 'Para medir el grosor de las cofias', 'Para batir la escayola', 'Para pulir los esqueléticos'], a: 0, e: 'Es un paralelómetro: tiene en cuenta las zonas retentivas para dar retención, estabilidad y estética a la prótesis.' },
+    { img: 'img/duplicadora.jpg', q: 'Máquina del área metálica para duplicar modelos. ¿Cuál es?', o: ['Duplicadora de gelatina o silicona', 'Polimerizadora', 'Horno de cerámica', 'Vaporeta'], a: 0, e: 'La duplicadora de gelatina o silicona es una de las máquinas del área metálica.' },
+    { img: 'img/banoelectrolitico.jpg', q: '¿Qué aparato es este?', o: ['Baño electrolítico', 'Baño de ultrasonidos', 'Arenadora', 'Lámpara fotopolimerizadora'], a: 0, e: 'El baño electrolítico abrillanta los esqueléticos mediante electrólisis.' },
+    { img: 'img/hornoprecalentamiento.jpg', q: '¿Qué equipo del área metálica se ve en la foto?', o: ['Horno de precalentamiento', 'Polimerizadora', 'Impresora 3D', 'Recortadora de modelos'], a: 0, e: 'El horno de precalentamiento de modelos forma parte del área metálica, junto a los sistemas de fundición.' },
+    { img: 'img/impresora3d.jpg', q: '¿Qué equipo del área digital es este?', o: ['Impresora 3D', 'Fresadora', 'Horno de cerámica', 'Polimerizadora'], a: 0, e: 'La impresora 3D, junto al escáner, el software CAD y la fresadora, forma parte del área digital.' },
+    { img: 'img/motoresqueleticos.jpg', q: 'Lleva pantalla protectora y luz y sirve para repasar el metal y separar bebederos. ¿Qué máquina es?', o: ['Motor de esqueléticos o fijo', 'Recortadora de modelos', 'Pulidora', 'Arenadora'], a: 0, e: 'El motor de esqueléticos sirve para trabajar los esqueléticos, repasar el metal y separar bebederos.' },
+    { img: 'img/termomoldeadora.jpg', q: '¿Qué máquina es esta?', o: ['Termomoldeadora', 'Prensa hidráulica', 'Paralelómetro', 'Polimerizadora'], a: 0, e: 'Fabrica planchas termomoldeables, que se usan para elaborar férulas dentales.' },
+    { img: 'img/lampara.jpg', q: '¿Qué aparato aparece en la foto?', o: ['Lámpara fotopolimerizadora', 'Horno de precalentamiento', 'Baño de ultrasonidos', 'Escáner de laboratorio'], a: 0, e: 'Permite una polimerización rápida de los materiales fotopolimerizables.' },
+    { img: 'img/cubetas.jpg', q: '¿Qué son estos instrumentos?', o: ['Cubetas de impresión', 'Muflas', 'Tazones de goma', 'Espátulas de cerámica'], a: 0, e: 'Recipientes para tomar impresiones, con forma adaptada a la arcada superior o inferior.' },
+    { img: 'img/lecron.jpg', q: 'Instrumento fino de metal: un extremo con cuchilla recta en punta y el otro en cola de castor. ¿Cuál es?', o: ['Lecron', 'Zhale', 'Peter K. Thomas', 'Bisturí'], a: 0, e: 'El lecron se calienta y se usa para modelar y encerar.' },
+    { img: 'img/zhale.jpg', q: 'Instrumento para modelar, parecido al lecron pero con la cuchilla curva. ¿Cómo se llama?', o: ['Zhale', 'Lecron', 'Cuchillo de encerar', 'Espátula para escayola'], a: 0, e: 'El zhale es similar al lecron, pero con la cuchilla curva.' },
+    { img: 'img/cuchilloencerar.jpg', q: '¿Qué instrumento es este, con mango central de madera?', o: ['Cuchillo de encerar', 'Espátula para escayola', 'Bisturí', 'Lecron'], a: 0, e: 'Es mayor que el lecron, con metal en los dos extremos y mango de madera; se usa para encerar.' },
+    { img: 'img/peterkthomas.jpg', q: '¿Qué instrumentos son estos?', o: ['Instrumentos Peter K. Thomas', 'Pinceles de cerámica', 'Lecrones', 'Pinzas de mosquito'], a: 0, e: 'Se sostienen por el centro, acaban en punta fina y curva, y sirven para encerar gota a gota.' },
+    { img: 'img/pinceles.jpg', q: '¿Para qué se usan estos instrumentos en el laboratorio?', o: ['Para modelar la cerámica', 'Para batir la escayola', 'Para encerar gota a gota', 'Para medir grosores'], a: 0, e: 'Son pinceles: mango con pelos en la punta, usados para el modelado de la cerámica.' },
+    { img: 'img/calibrador.jpg', q: '¿Qué instrumento es este?', o: ['Calibrador o medidor de grosores', 'Pinza de mosquito', 'Alicates', 'Articulador'], a: 0, e: 'Mide el grosor de los metales, sobre todo de las cofias metálicas.' },
+    { img: 'img/pinzamosquito.jpg', q: '¿Qué instrumento es este?', o: ['Pinza de mosquito', 'Alicates', 'Tijeras', 'Calibrador'], a: 0, e: 'No corta: sujeta por presión las cofias de coronas y puentes para no tocarlas con los dedos.' },
+    { img: 'img/ceramica.jpg', q: '¿Qué material de fabricación contienen estos botes?', o: ['Cerámica (porcelana)', 'Resina acrílica', 'Escayola', 'Cera'], a: 0, e: 'La cerámica es un material mineral, duro, frágil y rígido que se obtiene por la acción del calor en un horno.' },
+    { img: 'img/metal.jpg', q: '¿Qué material de fabricación se ve en la foto?', o: ['Metal (aleaciones para colado)', 'Cerámica', 'Resina', 'Escayola'], a: 0, e: 'Las aleaciones como el cromo-cobalto se trabajan por colado con la técnica de la cera perdida.' }
+  ],
+  '1.6': [
+    { img: 'img/desinfeccion.jpg', q: '¿Qué se está haciendo en la foto?', o: ['Lavar y desinfectar una impresión que llega de la clínica', 'Pulir una prótesis de resina', 'Colar una estructura metálica', 'Montar cerámica'], a: 0, e: 'Todo lo que llega de la clínica se considera contaminado: primero se lava y se desinfecta.' }
+  ],
+  '2.2': [
+    { img: 'img/ceramicas.jpg', q: '¿Qué materiales del almacén aparecen en la foto?', o: ['Masas cerámicas con su guía de colores', 'Resinas para impresión 3D', 'Aleaciones metálicas', 'Yesos'], a: 0, e: 'Se guardan protegidas del polvo e identificadas por sistema, masa (dentina, esmalte, incisal) y tonalidad.' },
+    { img: 'img/bloquecadcam.jpg', q: '¿Qué es lo que se ve en la foto?', o: ['Un bloque cerámico para CAD/CAM', 'Un diente artificial de resina', 'Un lingote de metal', 'Un implante'], a: 0, e: 'Los bloques y discos CAD/CAM deben conservarse en sus envases o soportes para evitar daños.' },
+    { img: 'img/dientes.jpg', q: '¿Qué material se guarda en estos cajones?', o: ['Dientes artificiales', 'Bloques CAD/CAM', 'Fresas', 'Masas cerámicas'], a: 0, e: 'Se organizan por fabricante, material, forma, tamaño, tonalidad y tipo de diente.' },
+    { img: 'img/resinas3d.jpg', q: 'Estas resinas son fotosensibles. ¿Cómo deben almacenarse?', o: ['Protegidas de la luz y respetando la temperatura del fabricante', 'Al sol para que no se endurezcan', 'Abiertas para que se aireen', 'En el congelador siempre'], a: 0, e: 'Hay que proteger de la luz los materiales fotosensibles y respetar las condiciones del fabricante.' }
+  ],
+  '2.4': [
+    { img: 'img/ficha.jpg', q: '¿Qué documentos de gestión del almacén aparecen en la foto?', o: ['Ficha de almacén e inventario', 'Factura y albarán', 'Prescripción del odontólogo', 'Declaración de conformidad'], a: 0, e: 'Las fichas de almacén registran entradas y salidas; en el inventario se cuentan las existencias y se comparan con las fichas.' }
+  ],
+  '2.5': [
+    { img: 'img/vevi.jpg', q: '¿Qué programa de gestión aparece en la captura?', o: ['Vevi Dental', 'PC Dental', 'Excel', 'Software CAD'], a: 0, e: 'Vevi Dental se usa en línea y tiene cinco apartados: Trabajos, Facturación, Almacén y gastos, Laboratorio y Análisis.' }
+  ]
+};
+Object.keys(PHOTO_QS).forEach(id => { const t = TOPICS.find(x => x.id === id); if (t) t.qs = t.qs.concat(PHOTO_QS[id]); });
+
 /* ===== DERIVADOS: banco de preguntas, exámenes mixtos y utilidades ===== */
 const ALL = [];
-TOPICS.forEach(t => t.qs.forEach((x, i) => ALL.push({ id: t.id + '-' + (i + 1), tid: t.id, unit: t.unit, q: x.q, o: x.o, a: x.a, e: x.e })));
+TOPICS.forEach(t => t.qs.forEach((x, i) => ALL.push({ id: t.id + '-' + (i + 1), tid: t.id, unit: t.unit, q: x.q, o: x.o, a: x.a, e: x.e, img: x.img, credit: x.credit })));
 /* Reparte la respuesta correcta por las posiciones de forma uniforme, por número de opciones */
 const seen = {};
 ALL.forEach(x => {
@@ -923,18 +990,25 @@ function unitPool(u) {
   for (let i = 0; i < n; i++) ts.forEach(t => { const x = BY_ID[t.id + '-' + (i + 1)]; if (x) out.push(x); });
   return out;
 }
-/* Cada examen toma bloques disjuntos de cada unidad: 25 + 25 = 50 preguntas */
+/* Cada examen toma bloques disjuntos de cada unidad (las preguntas con foto se reparten a partes iguales): 25 + 25 = 50 preguntas */
 const EXAM_K = { 1: 25, 2: 25 };
 const EXAMS = [0, 1, 2].map(e => {
   let list = [];
-  UNIT_IDS.forEach(u => { list = list.concat(shuffle(unitPool(u), 31 * u + 7).slice(e * EXAM_K[u], (e + 1) * EXAM_K[u])); });
+  Object.keys(EXAM_K).map(Number).forEach(u => {
+    const pool = shuffle(unitPool(u), 31 * u + 7);
+    const pics = pool.filter(x => x.img), rest = pool.filter(x => !x.img);
+    const np = Math.min(Math.floor(pics.length / 3), EXAM_K[u]), nr = EXAM_K[u] - np;
+    list = list.concat(pics.slice(e * np, (e + 1) * np), rest.slice(e * nr, (e + 1) * nr));
+  });
   return shuffle(list, 7919 * (e + 1));
 });
+/* Preguntas con foto de cada unidad */
+const PICS = ALL.filter(x => x.img);
 </script>
 
 <script>
 /* ===== APLICACIÓN ===== */
-const STORE_KEY = 'diseno-protesis-dental-v1';
+const STORE_KEY = 'laboratorio-almacen-dental-v1';
 let S = { studied: {}, mastered: {}, fails: {}, exams: {}, theme: null };
 try { S = Object.assign(S, JSON.parse(localStorage.getItem(STORE_KEY) || '{}')); } catch (_) {}
 function persist() { try { localStorage.setItem(STORE_KEY, JSON.stringify(S)); } catch (_) {} }
@@ -949,7 +1023,8 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;'
 const fmt2 = n => n.toFixed(2).replace('.', ',');
 /* Preguntas de hueco: la frase lleva ____ y la respuesta es una de las opciones */
 const hasBlank = x => /_{4,}/.test(x.q);
-const qHTML = x => esc(x.q).replace(/_{4,}/, '<span class="blank" aria-label="hueco"></span>');
+const qImg = x => x.img ? `<span class="qimg"><img src="${x.img}" alt="Imagen para identificar" loading="lazy">${x.credit ? `<small class="qcredit">${esc(x.credit)}</small>` : ''}</span>` : '';
+const qHTML = x => qImg(x) + esc(x.q).replace(/_{4,}/, '<span class="blank" aria-label="hueco"></span>');
 const completed = x => esc(x.q).replace(/_{4,}/, '<b>' + esc(x.o[x.a]) + '</b>');
 const fmtTime = s => String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
 const keysOn = obj => Object.keys(obj).filter(k => obj[k] && BY_ID[k]);
@@ -1077,8 +1152,18 @@ function viewTests() {
           <button class="btn" type="button" data-unit="${u}">Empezar</button>
         </div>
       </section>`;
-    }).join('')}`;
+    }).join('')}
+    <section class="unit">
+      <h3 class="unit-title"><span class="unit-n">Fotos</span>¿Qué es esto?</h3>
+      ${PICS.length ? `<div class="test-row full">
+        <div><strong>Test de imágenes</strong> <span class="pic-badge">${PICS.length} fotos</span>
+          <div class="muted small">Todas las preguntas con foto de todas las unidades, mezcladas · ${masteredIn(PICS)} dominadas</div></div>
+        <button class="btn primary" type="button" id="pics">Empezar</button>
+      </div>` : ''}
+    </section>`;
 
+  const pb = document.getElementById('pics');
+  if (pb) pb.onclick = () => startPractice(shuffle(PICS, Date.now() % 100000), 'Test de imágenes · ¿Qué es esto?', () => go('tests'));
   app.querySelectorAll('[data-start]').forEach(b => b.onclick = () => {
     const t = TOPICS.find(x => x.id === b.dataset.start);
     startPractice(ALL.filter(x => x.tid === t.id), `Punto ${t.id} · ${t.title}`, () => go('tests'));
@@ -1184,12 +1269,12 @@ function viewExams() {
   app.innerHTML = `
     <section class="head-row">
       <h2>Exámenes mixtos</h2>
-      <p>Tres exámenes de 50 preguntas tipo test que combinan las dos unidades. Tienes 60 minutos. No hay penalización por fallo y la nota se calcula sobre 10. La corrección aparece al entregar.</p>
+      <p>Tres exámenes de 50 preguntas tipo test que combinan las dos unidades. Tienes 60 minutos. No hay penalización por fallo y la nota se calcula sobre 10. Incluyen preguntas con foto. La corrección aparece al entregar.</p>
     </section>
     <div class="exam-grid">
       ${EXAMS.map((list, e) => {
         const r = S.exams[e];
-        const mix = UNIT_IDS.map(u => `U${u}: ${list.filter(x => x.unit === u).length}`).join(' · ');
+        const mix = UNIT_IDS.map(u => `U${u}: ${list.filter(x => x.unit === u).length}`).join(' · ') + ` · ${list.filter(x => x.img).length} con foto`;
         return `
         <article class="exam-card">
           <p class="eyebrow">Examen ${e + 1}</p>
