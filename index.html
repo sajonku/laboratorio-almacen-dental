@@ -297,6 +297,19 @@ main { padding-block: 26px 48px; min-height: 60vh; }
 .topic-body { padding: 2px 18px 18px; border-top: 1px solid var(--line); }
 .notes { margin: 12px 0 0; padding-left: 18px; }
 .notes li { margin: 7px 0; }
+.sec-label { margin: 16px 0 0; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+.full { margin-top: 6px; line-height: 1.6; }
+.full h4 { margin: 22px 0 8px; font-size: 17px; padding-bottom: 6px; border-bottom: 2px solid var(--accent-soft); }
+.full h5 { margin: 18px 0 6px; font-size: 15.5px; color: var(--accent); }
+.full h6 { margin: 14px 0 4px; font-size: 14.5px; }
+.full p { margin: 8px 0; }
+.full ul, .full ol { margin: 6px 0 10px; padding-left: 22px; }
+.full li { margin: 4px 0; }
+.full .callout { background: var(--accent-soft); border-left: 4px solid var(--accent); padding: 10px 14px; border-radius: 8px; }
+.full .tbl { overflow-x: auto; margin: 10px 0 14px; }
+.full table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.full th, .full td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+.full th { background: var(--accent-soft); font-weight: 700; }
 .topic-foot {
   display: flex;
   flex-wrap: wrap;
@@ -544,7 +557,7 @@ main { padding-block: 26px 48px; min-height: 60vh; }
         <h1>Laboratorio y almacén dental</h1>
         <p class="love"><span class="heart" aria-hidden="true">♥</span> tú puedes, mi vida · eres la mejor · te amo mucho <span class="heart" aria-hidden="true">♥</span></p>
       </div>
-      <p class="lede">Temario por puntos, tests con corrección inmediata y tres exámenes mixtos de 50 preguntas tipo test.</p>
+      <p class="lede">Temario por puntos, temario completo, tests con corrección inmediata y seis exámenes mixtos de 50 preguntas tipo test.</p>
     </div>
     <div class="stats">
       <div class="stat"><b id="st-m">0</b><span>de <span id="tot-q">0</span> dominadas</span></div>
@@ -570,6 +583,8 @@ main { padding-block: 26px 48px; min-height: 60vh; }
   Resumen de estudio elaborado a partir de las unidades 1 y 2 del material del curso. Las explicaciones resumen el contenido: contrasta siempre con los apuntes de clase.
 </footer>
 
+<script src="temario-completo.js"></script>
+<script src="preguntas-extra.js"></script>
 <script>
 /* ===== CONTENIDO: unidades 1 y 2 ===== */
 const UNITS = {
@@ -947,6 +962,9 @@ const PHOTO_QS = {
   ]
 };
 Object.keys(PHOTO_QS).forEach(id => { const t = TOPICS.find(x => x.id === id); if (t) t.qs = t.qs.concat(PHOTO_QS[id]); });
+/* Preguntas ampliadas y temario completo (archivos preguntas-extra.js y temario-completo.js). Se añaden al final para no cambiar los id de las preguntas ya existentes. */
+if (typeof EXTRA_QS !== 'undefined') Object.keys(EXTRA_QS).forEach(id => { const t = TOPICS.find(x => x.id === id); if (t) t.qs = t.qs.concat(EXTRA_QS[id]); });
+if (typeof FULL !== 'undefined') TOPICS.forEach(t => { if (FULL[t.id]) t.full = FULL[t.id]; });
 
 /* ===== DERIVADOS: banco de preguntas, exámenes mixtos y utilidades ===== */
 const ALL = [];
@@ -992,12 +1010,13 @@ function unitPool(u) {
 }
 /* Cada examen toma bloques disjuntos de cada unidad (las preguntas con foto se reparten a partes iguales): 25 + 25 = 50 preguntas */
 const EXAM_K = { 1: 25, 2: 25 };
-const EXAMS = [0, 1, 2].map(e => {
+const N_EXAMS = 6;
+const EXAMS = Array.from({ length: N_EXAMS }, (_, e) => e).map(e => {
   let list = [];
   Object.keys(EXAM_K).map(Number).forEach(u => {
     const pool = shuffle(unitPool(u), 31 * u + 7);
     const pics = pool.filter(x => x.img), rest = pool.filter(x => !x.img);
-    const np = Math.min(Math.floor(pics.length / 3), EXAM_K[u]), nr = EXAM_K[u] - np;
+    const np = Math.min(Math.floor(pics.length / N_EXAMS), EXAM_K[u]), nr = EXAM_K[u] - np;
     list = list.concat(pics.slice(e * np, (e + 1) * np), rest.slice(e * nr, (e + 1) * nr));
   });
   return shuffle(list, 7919 * (e + 1));
@@ -1087,7 +1106,9 @@ function topicCard(t) {
       <span class="tmeta">${t.qs.length} preguntas${t.pages ? ' · ' + esc(t.pages) : ''}</span>
     </summary>
     <div class="topic-body">
+      <p class="sec-label">Ideas clave</p>
       <ul class="notes">${t.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>
+      ${t.full ? `<p class="sec-label">Temario completo</p><div class="full">${t.full.replace(/<table>/g, '<div class="tbl"><table>').replace(/<\/table>/g, '</table></div>')}</div>` : ''}
       <div class="topic-foot">
         <label class="check"><input type="checkbox" data-study="${t.id}" ${S.studied[t.id] ? 'checked' : ''}> Punto repasado</label>
         <button class="btn ghost" type="button" data-test="${t.id}">Hacer test del punto (${t.qs.length})</button>
@@ -1099,7 +1120,7 @@ function viewTemario() {
   app.innerHTML = `
     <section class="head-row">
       <h2>Temario por puntos</h2>
-      <p>Esquemas con los conceptos clave de cada punto. Marca el punto cuando lo hayas repasado y pasa al test.</p>
+      <p>Cada punto trae las ideas clave y, debajo, el temario completo de las unidades 1 y 2 con todas sus tablas. Marca el punto cuando lo hayas repasado y pasa al test.</p>
     </section>
     <div class="filters" role="group" aria-label="Filtrar por unidad">
       ${[0, ...UNIT_IDS].map(u => `<button class="chip ${unitFilter === u ? 'on' : ''}" type="button" data-u="${u}" aria-pressed="${unitFilter === u}">${u ? 'Unidad ' + u : 'Todas'}</button>`).join('')}
@@ -1269,7 +1290,7 @@ function viewExams() {
   app.innerHTML = `
     <section class="head-row">
       <h2>Exámenes mixtos</h2>
-      <p>Tres exámenes de 50 preguntas tipo test que combinan las dos unidades. Tienes 60 minutos. No hay penalización por fallo y la nota se calcula sobre 10. Incluyen preguntas con foto. La corrección aparece al entregar.</p>
+      <p>Seis exámenes de 50 preguntas tipo test que combinan las dos unidades. Tienes 60 minutos. No hay penalización por fallo y la nota se calcula sobre 10. Incluyen preguntas con foto. La corrección aparece al entregar.</p>
     </section>
     <div class="exam-grid">
       ${EXAMS.map((list, e) => {
